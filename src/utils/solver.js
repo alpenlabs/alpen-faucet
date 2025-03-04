@@ -45,6 +45,4 @@ export async function findSolution(nonce, difficulty, updateAttempts) {
       }
     }
   }
-
-  return null;
 }

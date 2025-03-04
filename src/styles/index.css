@@ -152,7 +152,6 @@ button:focus-visible {
     width: 50%;
 }
 
-
 .confirmation-grid {
     display: grid;
     grid-template-columns: max-content auto; /* ✅ First column auto-sizes */

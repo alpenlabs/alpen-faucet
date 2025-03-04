@@ -26,7 +26,7 @@ export default function Home() {
   const handleInputChange = (e) => {
     const value = e.target.value;
     setInputAddress(value);
-    setIsInputValid(isAddress(value)); // ✅ Validate Ethereum address using ethers.js
+    setIsInputValid(isAddress(value));
   };
 
   const handleEnterAddress = () => {
