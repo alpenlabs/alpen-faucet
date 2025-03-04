@@ -12,8 +12,6 @@ export async function getPowChallenge() {
   
       // ✅ Check if response is valid JSON
       const data = await res.json().catch(() => null);
-      console.log(res);
-      console.log(data);
       if (!res.ok || !data) throw new Error("Invalid response from server");
   
       return data;

@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { useWallet } from "../providers/WalletProvider";
 import { isAddress } from "ethers";
 import AddressBadge from "../components/AddressBadge";
-import { getPowChallenge } from "../utils/api";
+import { getPowChallenge, submitClaim } from "../utils/api";
+import { findSolution } from "../utils/solver";
 import "../styles/index.css";
 
 export default function Home() {
@@ -66,12 +67,12 @@ export default function Home() {
       return;
     }
 
-    setChallenge(response.challenge);
+    setChallenge(response);
     setTries(0); // Reset attempt counter
     setSolvingPoW(true); // ✅ Disable Confirm button while solving
 
     // ✅ Step 2: Find solution using solver.js
-    const foundSolution = await find_solution(response.challenge, setTries);
+    const foundSolution = await findSolution(response.nonce, response.difficulty, setTries);
     if (!foundSolution) {
       setError("Failed to solve challenge.");
       setLoading(false);
@@ -83,7 +84,7 @@ export default function Home() {
     setSolvingPoW(false);
 
     // ✅ Step 3: Submit the claim request
-    const claimResponse = await submitClaim(foundSolution, ethAddress);
+    const claimResponse = await submitClaim(foundSolution, walletAddress);
     if (!claimResponse) {
       setError("Claim submission failed.");
       setLoading(false);
@@ -160,7 +161,7 @@ export default function Home() {
       <div className="home-box">
         <div className="home-title">Get test BTC</div>
         <span><strong>Amount:</strong> 1 BTC </span>
-        <span><strong>Proof of Work:</strong> {tries > 0 ? `${tries} tries` : "-"}</span>
+        <span><strong>Proof of Work:</strong> {tries > 0 ? `${tries}` : "-"}</span>
         <span><strong>TXID:</strong> {txId || "-"}</span>
 
         {/* ✅ Show Error Message If Needed */}

@@ -16,7 +16,7 @@ function countLeadingZeros(data) {
   return leadingZeros;
 }
 
-async function findSolution(nonce, difficulty, updateAttempts) {
+export async function findSolution(nonce, difficulty, updateAttempts) {
   const salt = new Uint8Array([
     0x73, 0x74, 0x72, 0x61, 0x74, 0x61, 0x20, 0x66,
     0x61, 0x75, 0x63, 0x65, 0x74, 0x20, 0x32, 0x30,
@@ -25,7 +25,7 @@ async function findSolution(nonce, difficulty, updateAttempts) {
 
   nonce = new Uint8Array(nonce.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
   let solution = new Uint8Array(8);
-  attempts = 0;
+  let attempts = 0;
 
   while (true) {
     attempts += 1;
