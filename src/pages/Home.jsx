@@ -67,6 +67,10 @@ export default function Home() {
       return;
     }
 
+<<<<<<< HEAD
+=======
+    setChallenge(response);
+>>>>>>> a1147ff (PoW solution is sent, but getting 500 error)
     setTries(0); // Reset attempt counter
     setSolvingPoW(true); // ✅ Disable Confirm button while solving
 
