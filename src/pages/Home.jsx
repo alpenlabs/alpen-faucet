@@ -154,16 +154,26 @@ export default function Home() {
       <div className="home-box">
         <div className="home-title">Get test BTC</div>
         <div className="confirmation-grid">
-          <div className="grid-row"><span className="grid-label">Amount: </span> <span>10 BTC</span></div>
-          <div className="grid-row"><span className="grid-label">Proof of work: </span> <span>{tries > 0 ? `${tries} tries` : "-"}</span></div>
-          <div className="grid-row"><span className="grid-label">TXID: </span> <span>
-          {txId ? (
-            <a href={`${STRATA_BLOCKSCOUT_URL}/tx/${txId}`} target="_blank" rel="noopener noreferrer" className="txid-link">
-              {txId.slice(0, 6)}...{txId.slice(-4)}
-            </a>
-          ) : (
-            "-"
-          )}</span></div>
+          <div className="grid-row">
+            <span className="grid-label">Amount: </span>
+            <span className="grid-value">10 BTC</span>
+          </div>
+          <div className="grid-row">
+            <span className="grid-label">Proof of work: </span>
+            <span className="grid-value">{tries > 0 ? `${tries} tries` : "-"}</span>
+          </div>
+          <div className="grid-row">
+            <span className="grid-label">TXID: </span>
+            <span className="grid-value">
+              {txId ? (
+                <a href={`${STRATA_BLOCKSCOUT_URL}/tx/${txId}`} target="_blank" rel="noopener noreferrer" className="txid-link">
+                  {txId.slice(0, 6)}...{txId.slice(-4)}
+                </a>
+              ) : (
+                "-"
+              )}
+            </span>
+          </div>
         </div>
         {/* ✅ Show Error Message If Needed */}
         {error && <p className="error-message">{error}</p>}

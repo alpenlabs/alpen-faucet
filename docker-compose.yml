@@ -1,0 +1,11 @@
+services:
+  strata-faucet:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: strata_faucet
+    environment:
+      VITE_STRATA_FAUCET_URL: https://faucetf93d13fbc.temp6-testnet1-staging.stratabtc.org
+      VITE_STRATA_BLOCKSCOUT_URL: https://blockscout.temp6-testnet1-staging.stratabtc.org
+    ports:
+      - "5173:5173"

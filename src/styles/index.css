@@ -154,20 +154,24 @@ button:focus-visible {
 
 .confirmation-grid {
     display: grid;
-    grid-template-columns: max-content auto; /* ✅ First column auto-sizes */
+    grid-auto-rows: minmax(24px, auto);
     align-items: right;
 }
 
 .grid-row {
     display: grid;
-    grid-template-columns: max-content auto; /* ✅ Ensures label & value alignment */
-    align-items: center;
+    grid-template-columns: max-content auto;
     gap: 12px;
 }
 
 .grid-label {
-    min-width: 120px; /* ✅ Ensures alignment */
-    text-align: right; /* ✅ Aligns colons */
+    min-width: 120px;
+    text-align: right;
+}
+
+.grid-value {
+    min-width: 120px;
+    text-align: left;
 }
 
 /* Confirm button */
