@@ -6,6 +6,8 @@ import { getPowChallenge, submitClaim } from "../utils/api";
 import { findSolution } from "../utils/solver";
 import "../styles/index.css";
 
+const STRATA_BLOCKSCOUT_URL = import.meta.env.VITE_STRATA_BLOCKSCOUT_URL;
+
 export default function Home() {
   const { walletAddress, connectWallet, disconnectWallet } = useWallet();
   const [manualEntry, setManualEntry] = useState(false);
@@ -13,8 +15,6 @@ export default function Home() {
   const [isInputValid, setIsInputValid] = useState(null);
   const [copied, setCopied] = useState(false);
   const [walletConnected, setWalletConnected] = useState(false);
-  const [challenge, setChallenge] = useState(null);
-  const [solution, setSolution] = useState(null);
   const [tries, setTries] = useState(0);
   const [loading, setLoading] = useState(false);
   const [solvingPoW, setSolvingPoW] = useState(false); // ✅ Track PoW solving
@@ -67,7 +67,6 @@ export default function Home() {
       return;
     }
 
-    setChallenge(response);
     setTries(0); // Reset attempt counter
     setSolvingPoW(true); // ✅ Disable Confirm button while solving
 
@@ -80,28 +79,22 @@ export default function Home() {
       return;
     }
 
-    setSolution(foundSolution);
     setSolvingPoW(false);
 
     // ✅ Step 3: Submit the claim request
     const claimResponse = await submitClaim(foundSolution, walletAddress);
     if (!claimResponse) {
       setError("Claim submission failed.");
-      setLoading(false);
-      return;
+    } else {
+      // ✅ Step 4: Store the TXID & Mark as Completed
+      setTxId(claimResponse || "Pending");
     }
-
-    // ✅ Step 4: Store the TXID & Mark as Completed
-    setTxId(claimResponse.txid || "Pending");
     setCompleted(true); // ✅ Show "Start Over" button
-
     setLoading(false);
   };
 
   // ✅ Handle Reset (Start Over)
   const handleReset = () => {
-    setChallenge(null);
-    setSolution(null);
     setTries(0);
     setLoading(false);
     setSolvingPoW(false);
@@ -160,16 +153,24 @@ export default function Home() {
       {/* ✅ Confirmation Section */}
       <div className="home-box">
         <div className="home-title">Get test BTC</div>
-        <span><strong>Amount:</strong> 1 BTC </span>
-        <span><strong>Proof of Work:</strong> {tries > 0 ? `${tries}` : "-"}</span>
-        <span><strong>TXID:</strong> {txId || "-"}</span>
-
+        <div className="confirmation-grid">
+          <div className="grid-row"><span className="grid-label">Amount: </span> <span>10 BTC</span></div>
+          <div className="grid-row"><span className="grid-label">Proof of work: </span> <span>{tries > 0 ? `${tries} tries` : "-"}</span></div>
+          <div className="grid-row"><span className="grid-label">TXID: </span> <span>
+          {txId ? (
+            <a href={`${STRATA_BLOCKSCOUT_URL}/tx/${txId}`} target="_blank" rel="noopener noreferrer" className="txid-link">
+              {txId.slice(0, 6)}...{txId.slice(-4)}
+            </a>
+          ) : (
+            "-"
+          )}</span></div>
+        </div>
         {/* ✅ Show Error Message If Needed */}
         {error && <p className="error-message">{error}</p>}
 
         {/* ✅ Confirm Button → Becomes "Start Over" When Done */}
         <button 
-          className="home-button mt-4" 
+          className="confirm-button mt-4"
           onClick={completed ? handleReset : handleConfirm} 
           disabled={loading || solvingPoW}
         >

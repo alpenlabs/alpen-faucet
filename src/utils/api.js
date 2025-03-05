@@ -16,7 +16,7 @@ export async function getPowChallenge() {
   
       return data;
     } catch (error) {
-      console.error("Error fetching PoW challenge:", error);
+      console.error("Failed to fetch Proof of Work:", error);
       return null;
     }
 }
@@ -28,14 +28,31 @@ export async function getPowChallenge() {
  * @returns {Promise<Object>} Response from the backend.
  */
 export async function submitClaim(solution, address) {
-    try {
+  try {
       const res = await fetch(`${STRATA_FAUCET_URL}/claim_l2/${solution}/${address}`, {
-        method: "GET",
+          method: "GET",
       });
-      if (!res.ok) throw new Error("Failed to submit claim");
-      return await res.json();
-    } catch (error) {
-      console.error("Error submitting claim:", error);
+
+      if (!res.ok) {
+          // ✅ Attempt to parse error as JSON, otherwise return raw text
+          let errorMessage;
+          try {
+              const errorJson = await res.json();
+              errorMessage = errorJson.error || JSON.stringify(errorJson);
+          } catch {
+              errorMessage = await res.text();
+          }
+          console.error("Failed to claim test BTC", errorMessage);
+          return null;
+      }
+
+      // ✅ On success, return the raw TXID as text
+      const txid = await res.text();
+      console.log("Claim TXID:", txid); // ✅ Debugging
+
+      return txid.trim(); // ✅ Remove extra spaces/newlines
+  } catch (error) {
+      console.error("Failed to submit claim:", error);
       return null;
-    }
+  }
 }

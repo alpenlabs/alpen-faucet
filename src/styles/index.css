@@ -152,11 +152,34 @@ button:focus-visible {
     width: 50%;
 }
 
+
+.confirmation-grid {
+    display: grid;
+    grid-template-columns: max-content auto; /* ✅ First column auto-sizes */
+    align-items: right;
+}
+
+.grid-row {
+    display: grid;
+    grid-template-columns: max-content auto; /* ✅ Ensures label & value alignment */
+    align-items: center;
+    gap: 12px;
+}
+
+.grid-label {
+    min-width: 120px; /* ✅ Ensures alignment */
+    text-align: right; /* ✅ Aligns colons */
+}
+
 /* Confirm button */
 .confirm-button {
     margin-top: 2rem;
     color: white;
     width: 25%;
+}
+
+.confirm-button:disabled {
+    background-color: var(--strata-terracotta-light);
 }
 
 /* Enter button */
@@ -183,6 +206,12 @@ button:focus-visible {
   color: black;
   text-decoration: underline;
   cursor: pointer;
+}
+
+/* Claim txid link */
+.txid-link {
+    color: var(--strata-terracotta-med);
+    text-decoration: underline;
 }
 
 /* Error styling for invalid addresses */
