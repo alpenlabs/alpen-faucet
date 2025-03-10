@@ -5,20 +5,36 @@ const STRATA_FAUCET_URL = import.meta.env.VITE_STRATA_FAUCET_URL || "http://loca
  * @returns {Promise<Object|null>} Response from the backend.
  */
 export async function getPowChallenge() {
-    try {
+  try {
       const res = await fetch(`${STRATA_FAUCET_URL}/pow_challenge`, {
-        method: "GET",
+          method: "GET",
       });
-  
-      // ✅ Check if response is valid JSON
-      const data = await res.json().catch(() => null);
-      if (!res.ok || !data) throw new Error("Invalid response from server");
-  
-      return data;
-    } catch (error) {
-      console.error("Failed to fetch Proof of Work:", error);
+
+      // ✅ Read response ONCE as text
+      const responseText = await res.text();
+
+      // ✅ First check: If response is NOT OK (e.g., 500 error)
+      if (!res.ok) {
+          let errorMessage = "Unknown error";
+
+          try {
+              // ✅ Attempt to parse JSON error response from stored text
+              const errorData = JSON.parse(responseText);
+              errorMessage = errorData.message || JSON.stringify(errorData);
+          } catch {
+              // ✅ If JSON parsing fails, use the raw response text
+              errorMessage = responseText;
+          }
+
+          throw new Error(`Failed to fetch Proof of Work: ${errorMessage}`);
+      }
+
+      // ✅ Convert the successful response to JSON
+      return JSON.parse(responseText);
+  } catch (error) {
+      console.error(error.message || error);
       return null;
-    }
+  }
 }
 
 /**
@@ -33,26 +49,27 @@ export async function submitClaim(solution, address) {
           method: "GET",
       });
 
+      // ✅ Read response once
+      const responseText = await res.text(); 
+
       if (!res.ok) {
           // ✅ Attempt to parse error as JSON, otherwise return raw text
           let errorMessage;
           try {
-              const errorJson = await res.json();
+              const errorJson = JSON.parse(responseText); // ✅ Parse already read text
               errorMessage = errorJson.error || JSON.stringify(errorJson);
           } catch {
-              errorMessage = await res.text();
+              errorMessage = responseText; // ✅ Use plain text if JSON parsing fails
           }
-          console.error("Failed to claim test BTC", errorMessage);
+          console.error("Failed to claim test BTC:", errorMessage);
           return null;
       }
 
-      // ✅ On success, return the raw TXID as text
-      const txid = await res.text();
-      console.log("Claim TXID:", txid); // ✅ Debugging
+      console.log("Claim TXID:", responseText); // ✅ Debugging
+      return responseText.trim(); // ✅ Return trimmed TXID
 
-      return txid.trim(); // ✅ Remove extra spaces/newlines
   } catch (error) {
-      console.error("Failed to submit claim:", error);
+      console.error("Failed to submit claim:", error.message || error);
       return null;
   }
 }

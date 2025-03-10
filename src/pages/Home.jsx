@@ -160,7 +160,7 @@ export default function Home() {
           </div>
           <div className="grid-row">
             <span className="grid-label">Proof of work: </span>
-            <span className="grid-value">{tries > 0 ? `${tries} tries` : "-"}</span>
+            <span className="grid-value">{tries > 0 ? `${tries}` : "-"}</span>
           </div>
           <div className="grid-row">
             <span className="grid-label">TXID: </span>
