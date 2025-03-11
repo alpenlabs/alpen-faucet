@@ -25,9 +25,9 @@ export default function Home() {
 
   useEffect(() => {
       async function fetchAmount() {
-          const amountInSats = await getClaimAmount("l2"); // ✅ Fetch amount in sats
+          const amountInSats = await getClaimAmount("l2");
           if (amountInSats) {
-              const amountInBTC = (parseInt(amountInSats, 10) / 100_000_000).toFixed(2); // ✅ Convert sats to BTC
+              const amountInBTC = (parseInt(amountInSats, 10) / 100_000_000).toFixed(2);
               setClaimAmount(amountInBTC);
           }
       }
