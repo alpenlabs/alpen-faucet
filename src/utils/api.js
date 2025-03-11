@@ -4,6 +4,42 @@ const STRATA_FAUCET_URL = import.meta.env.VITE_STRATA_FAUCET_URL || "http://loca
  * Calls the faucet's /pow_challenge endpoint.
  * @returns {Promise<Object|null>} Response from the backend.
  */
+export async function getClaimAmount(level) {
+    try {
+        const res = await fetch(`${STRATA_FAUCET_URL}/sats_to_claim/${level}`, {
+            method: "GET",
+        });
+
+        // ✅ Read response ONCE as text
+        const responseText = await res.text();
+
+        // ✅ First check: If response is NOT OK (e.g., 500 error)
+        if (!res.ok) {
+            let errorMessage;
+            try {
+                // ✅ Attempt to parse JSON error response from stored text
+                const errorData = JSON.parse(responseText);
+                errorMessage = errorData.message || JSON.stringify(errorData);
+            } catch {
+                // ✅ If JSON parsing fails, use the raw response text
+                errorMessage = responseText;
+            }
+
+            throw new Error(`Failed to fetch claim amount: ${errorMessage}`);
+        }
+
+        // ✅ Convert the successful response to JSON
+        return JSON.parse(responseText);
+    } catch (error) {
+        console.error(error.message || error);
+        return null;
+    }
+}
+
+/**
+ * Calls the faucet's /pow_challenge endpoint.
+ * @returns {Promise<Object|null>} Response from the backend.
+ */
 export async function getPowChallenge() {
   try {
       const res = await fetch(`${STRATA_FAUCET_URL}/pow_challenge`, {
@@ -15,18 +51,17 @@ export async function getPowChallenge() {
 
       // ✅ First check: If response is NOT OK (e.g., 500 error)
       if (!res.ok) {
-          let errorMessage = "Unknown error";
+        let errorMessage;
+        try {
+            // ✅ Attempt to parse JSON error response from stored text
+            const errorData = JSON.parse(responseText);
+            errorMessage = errorData.message || JSON.stringify(errorData);
+        } catch {
+            // ✅ If JSON parsing fails, use the raw response text
+            errorMessage = responseText;
+        }
 
-          try {
-              // ✅ Attempt to parse JSON error response from stored text
-              const errorData = JSON.parse(responseText);
-              errorMessage = errorData.message || JSON.stringify(errorData);
-          } catch {
-              // ✅ If JSON parsing fails, use the raw response text
-              errorMessage = responseText;
-          }
-
-          throw new Error(`Failed to fetch Proof of Work: ${errorMessage}`);
+        throw new Error(`Failed to fetch Proof of Work: ${errorMessage}`);
       }
 
       // ✅ Convert the successful response to JSON

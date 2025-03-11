@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useWallet } from "../providers/WalletProvider";
 import { isAddress } from "ethers";
 import AddressBadge from "../components/AddressBadge";
-import { getPowChallenge, submitClaim } from "../utils/api";
+import { getClaimAmount, getPowChallenge, submitClaim } from "../utils/api";
 import { findSolution } from "../utils/solver";
 import "../styles/index.css";
 
@@ -21,6 +21,18 @@ export default function Home() {
   const [txId, setTxId] = useState(null);
   const [error, setError] = useState("");
   const [completed, setCompleted] = useState(false); // ✅ Track if claim is done
+  const [claimAmount, setClaimAmount] = useState(null);
+
+  useEffect(() => {
+      async function fetchAmount() {
+          const amountInSats = await getClaimAmount("l2"); // ✅ Fetch amount in sats
+          if (amountInSats) {
+              const amountInBTC = (parseInt(amountInSats, 10) / 100_000_000).toFixed(2); // ✅ Convert sats to BTC
+              setClaimAmount(amountInBTC);
+          }
+      }
+      fetchAmount();
+  }, []);
 
   // ✅ Validate Address on Input Change
   const handleInputChange = (e) => {
@@ -156,7 +168,7 @@ export default function Home() {
         <div className="confirmation-grid">
           <div className="grid-row">
             <span className="grid-label">Amount: </span>
-            <span className="grid-value">10 BTC</span>
+            <span className="grid-value">{claimAmount ? `${claimAmount} BTC` : "Loading..."}</span>
           </div>
           <div className="grid-row">
             <span className="grid-label">Proof of work: </span>
