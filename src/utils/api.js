@@ -40,9 +40,9 @@ export async function getClaimAmount(chain) {
  * Calls the faucet's /pow_challenge endpoint.
  * @returns {Promise<Object|null>} Response from the backend.
  */
-export async function getPowChallenge() {
+export async function getPowChallenge(chain) {
   try {
-      const res = await fetch(`${STRATA_FAUCET_URL}/pow_challenge`, {
+      const res = await fetch(`${STRATA_FAUCET_URL}/pow_challenge/${chain}`, {
           method: "GET",
       });
 

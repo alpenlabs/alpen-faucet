@@ -72,7 +72,7 @@ export default function Home() {
     setError("");
 
     // ✅ Step 1: Get PoW challenge from the backend
-    const response = await getPowChallenge();
+    const response = await getPowChallenge("l2");
     if (!response) {
       setError("Failed to fetch PoW challenge. Try again.");
       setLoading(false);
