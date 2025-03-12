@@ -4,9 +4,9 @@ const STRATA_FAUCET_URL = import.meta.env.VITE_STRATA_FAUCET_URL || "http://loca
  * Calls the faucet's /pow_challenge endpoint.
  * @returns {Promise<Object|null>} Response from the backend.
  */
-export async function getClaimAmount(level) {
+export async function getClaimAmount(chain) {
     try {
-        const res = await fetch(`${STRATA_FAUCET_URL}/sats_to_claim/${level}`, {
+        const res = await fetch(`${STRATA_FAUCET_URL}/sats_to_claim/${chain}`, {
             method: "GET",
         });
 
