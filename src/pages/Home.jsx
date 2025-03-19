@@ -57,7 +57,6 @@ export default function Home() {
     }
   };
 
-  // ✅ Handle Disconnect for Manual & MetaMask Cases
   const handleDisconnect = () => {
     setInputAddress("");  // ✅ Clears manually entered address
     setIsInputValid(null);  // ✅ Resets validation state
@@ -168,7 +167,7 @@ export default function Home() {
         <div className="confirmation-grid">
           <div className="grid-row">
             <span className="grid-label">Amount: </span>
-            <span className="grid-value">{claimAmount ? `${claimAmount} BTC` : "Loading..."}</span>
+            <span className="grid-value">{claimAmount ? `${claimAmount} BTC` : "-"}</span>
           </div>
           <div className="grid-row">
             <span className="grid-label">Proof of work: </span>
