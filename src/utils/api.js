@@ -4,7 +4,7 @@ export async function handleJsonResponse(res) {
     const responseText = await res.text(); // Read once
 
     if (res.ok) {
-        return { ok: true, data: JSON.parse(responseText).trim() }; // Success path
+        return { ok: true, data: JSON.parse(responseText) }; // Success path
     }
 
     let errorMessage;
@@ -76,7 +76,7 @@ export async function submitClaim(solution, address) {
         }
 
         console.log("Claim TXID:", result.data);
-        return result.data;
+        return result.data.trim();
     } catch (error) {
         console.error(error.message || error);
         return null;
