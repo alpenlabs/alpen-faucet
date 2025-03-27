@@ -1,4 +1,21 @@
-const STRATA_FAUCET_URL = import.meta.env.VITE_STRATA_FAUCET_URL || "http://localhost:8080";
+const STRATA_FAUCET_URL = import.meta.env.VITE_STRATA_FAUCET_URL;
+
+export async function handleJsonResponse(res) {
+    const responseText = await res.text(); // Read once
+
+    if (res.ok) {
+        return { ok: true, data: JSON.parse(responseText).trim() }; // Success path
+    }
+
+    let errorMessage;
+    try {
+        const errorJson = JSON.parse(responseText);
+        errorMessage = errorJson.error || JSON.stringify(errorJson);
+    } catch {
+        errorMessage = responseText;
+    }
+    return { ok: false, error: errorMessage }
+}
 
 /**
  * Calls the faucet's /pow_challenge endpoint.
@@ -6,30 +23,15 @@ const STRATA_FAUCET_URL = import.meta.env.VITE_STRATA_FAUCET_URL || "http://loca
  */
 export async function getClaimAmount(chain) {
     try {
-        const res = await fetch(`${STRATA_FAUCET_URL}/sats_to_claim/${chain}`, {
-            method: "GET",
-        });
+        const res = await fetch(`${STRATA_FAUCET_URL}/sats_to_claim/${chain}`, {});
 
-        // ✅ Read response ONCE as text
-        const responseText = await res.text();
-
-        // ✅ First check: If response is NOT OK (e.g., 500 error)
-        if (!res.ok) {
-            let errorMessage;
-            try {
-                // ✅ Attempt to parse JSON error response from stored text
-                const errorData = JSON.parse(responseText);
-                errorMessage = errorData.message || JSON.stringify(errorData);
-            } catch {
-                // ✅ If JSON parsing fails, use the raw response text
-                errorMessage = responseText;
-            }
-
-            throw new Error(`Failed to fetch claim amount: ${errorMessage}`);
+        const result = await handleJsonResponse(res);
+        if (!result.ok) {
+            console.error("Failed to get claim amount:", result.error);
+            return null;
         }
 
-        // ✅ Convert the successful response to JSON
-        return JSON.parse(responseText);
+        return result.data;
     } catch (error) {
         console.error(error.message || error);
         return null;
@@ -41,35 +43,20 @@ export async function getClaimAmount(chain) {
  * @returns {Promise<Object|null>} Response from the backend.
  */
 export async function getPowChallenge(chain) {
-  try {
-      const res = await fetch(`${STRATA_FAUCET_URL}/pow_challenge/${chain}`, {
-          method: "GET",
-      });
+    try {
+        const res = await fetch(`${STRATA_FAUCET_URL}/pow_challenge/${chain}`, {});
 
-      // ✅ Read response ONCE as text
-      const responseText = await res.text();
-
-      // ✅ First check: If response is NOT OK (e.g., 500 error)
-      if (!res.ok) {
-        let errorMessage;
-        try {
-            // ✅ Attempt to parse JSON error response from stored text
-            const errorData = JSON.parse(responseText);
-            errorMessage = errorData.message || JSON.stringify(errorData);
-        } catch {
-            // ✅ If JSON parsing fails, use the raw response text
-            errorMessage = responseText;
+        const result = await handleJsonResponse(res);
+        if (!result.ok) {
+            console.error("Failed to fetch Proof of Work:", result.error);
+            return null;
         }
 
-        throw new Error(`Failed to fetch Proof of Work: ${errorMessage}`);
-      }
-
-      // ✅ Convert the successful response to JSON
-      return JSON.parse(responseText);
-  } catch (error) {
-      console.error(error.message || error);
-      return null;
-  }
+        return result.data;
+    } catch (error) {
+        console.error(error.message || error);
+        return null;
+    }
 }
 
 /**
@@ -79,32 +66,19 @@ export async function getPowChallenge(chain) {
  * @returns {Promise<Object>} Response from the backend.
  */
 export async function submitClaim(solution, address) {
-  try {
-      const res = await fetch(`${STRATA_FAUCET_URL}/claim_l2/${solution}/${address}`, {
-          method: "GET",
-      });
+    try {
+        const res = await fetch(`${STRATA_FAUCET_URL}/claim_l2/${solution}/${address}`, {});
 
-      // ✅ Read response once
-      const responseText = await res.text(); 
+        const result = await handleJsonResponse(res);
+        if (!result.ok) {
+            console.error("Failed to claim test BTC:", result.error);
+            return null;
+        }
 
-      if (!res.ok) {
-          // ✅ Attempt to parse error as JSON, otherwise return raw text
-          let errorMessage;
-          try {
-              const errorJson = JSON.parse(responseText); // ✅ Parse already read text
-              errorMessage = errorJson.error || JSON.stringify(errorJson);
-          } catch {
-              errorMessage = responseText; // ✅ Use plain text if JSON parsing fails
-          }
-          console.error("Failed to claim test BTC:", errorMessage);
-          return null;
-      }
-
-      console.log("Claim TXID:", responseText); // ✅ Debugging
-      return responseText.trim(); // ✅ Return trimmed TXID
-
-  } catch (error) {
-      console.error("Failed to submit claim:", error.message || error);
-      return null;
-  }
+        console.log("Claim TXID:", result.data);
+        return result.data;
+    } catch (error) {
+        console.error(error.message || error);
+        return null;
+    }
 }
