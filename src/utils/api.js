@@ -23,7 +23,7 @@ export async function handleJsonResponse(res) {
  */
 export async function getClaimAmount(chain) {
     try {
-        const res = await fetch(`${STRATA_FAUCET_URL}/sats_to_claim/${chain}`, {});
+        const res = await fetch(`${STRATA_FAUCET_URL}/sats_to_claim/${chain}`);
 
         const result = await handleJsonResponse(res);
         if (!result.ok) {
@@ -44,7 +44,7 @@ export async function getClaimAmount(chain) {
  */
 export async function getPowChallenge(chain) {
     try {
-        const res = await fetch(`${STRATA_FAUCET_URL}/pow_challenge/${chain}`, {});
+        const res = await fetch(`${STRATA_FAUCET_URL}/pow_challenge/${chain}`);
 
         const result = await handleJsonResponse(res);
         if (!result.ok) {
@@ -67,7 +67,7 @@ export async function getPowChallenge(chain) {
  */
 export async function submitClaim(solution, address) {
     try {
-        const res = await fetch(`${STRATA_FAUCET_URL}/claim_l2/${solution}/${address}`, {});
+        const res = await fetch(`${STRATA_FAUCET_URL}/claim_l2/${solution}/${address}`);
 
         const result = await handleJsonResponse(res);
         if (!result.ok) {
