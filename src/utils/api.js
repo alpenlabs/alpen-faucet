@@ -1,6 +1,34 @@
 const STRATA_FAUCET_URL = import.meta.env.VITE_STRATA_FAUCET_URL;
 
 /**
+ * Parses a fetch response expected to return JSON and wraps the result
+ * in a standard `{ ok, data | error }` structure.
+ *
+ * - Returns `{ ok: true, data }` if the response is OK and JSON is valid.
+ * - Returns `{ ok: false, error }` if the response is not OK or parsing fails.
+ *
+ * @param {Response} res - The fetch API Response object.
+ * @returns {Promise<{ ok: true, data: any } | { ok: false, error: string }>}
+ */
+export async function handleJsonResponse(res) {
+    const responseText = await res.text(); // Read once
+
+    if (res.ok) {
+        return { ok: true, data: JSON.parse(responseText) };
+    }
+
+    let errorMessage;
+    try {
+        const errorJson = JSON.parse(responseText);
+        errorMessage = errorJson.error || JSON.stringify(errorJson);
+    } catch {
+        errorMessage = responseText;
+    }
+
+    return { ok: false, error: errorMessage };
+}
+
+/**
  * Calls the faucet-api url. On error, logs the error with given context.
  * @returns {Promise<Object|null>} Response from the backend.
  */
