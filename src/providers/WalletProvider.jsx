@@ -12,7 +12,7 @@ export function WalletProvider({ children }) {
       const ethProvider = new ethers.BrowserProvider(window.ethereum);
       setProvider(ethProvider);
 
-      // ✅ Listen for MetaMask account changes
+      // Listen for MetaMask account changes
       window.ethereum.on("accountsChanged", async (accounts) => {
         if (accounts.length > 0) {
           setWalletAddress(accounts[0]);
@@ -21,14 +21,14 @@ export function WalletProvider({ children }) {
         }
       });
 
-      // ✅ Listen for network changes
+      // Listen for network changes
       window.ethereum.on("chainChanged", () => {
         window.location.reload();
       });
     }
   }, []);
 
-  // ✅ Connect Wallet via MetaMask
+  // Connect Wallet via MetaMask
   const connectWallet = async () => {
     if (!provider) {
       alert("MetaMask is not installed! Please install it to continue.");
@@ -45,14 +45,14 @@ export function WalletProvider({ children }) {
     }
   };
 
-  // ✅ Connect Manually via Address Entry
+  // Connect Manually via Address Entry
   const connectManual = (address) => {
     setWalletAddress(address); // ✅ Set manually entered address
   };
 
-  // ✅ Disconnect Wallet (Clears Both MetaMask & Manual Entry)
+  // Disconnect Wallet (Clears Both MetaMask & Manual Entry)
   const disconnectWallet = () => {
-    setWalletAddress(null); // ✅ Clears wallet whether manual or MetaMask
+    setWalletAddress(null);
   };
 
   return (

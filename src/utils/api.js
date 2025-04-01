@@ -1,31 +1,26 @@
 const STRATA_FAUCET_URL = import.meta.env.VITE_STRATA_FAUCET_URL;
 
 /**
- * Parses a fetch response expected to return JSON and wraps the result
- * in a standard `{ ok, data | error }` structure.
+ * Handles a fetch response, auto-detecting JSON or plain text.
+ * Returns an object with { ok: true, data } or { ok: false, error }.
  *
- * - Returns `{ ok: true, data }` if the response is OK and JSON is valid.
- * - Returns `{ ok: false, error }` if the response is not OK or parsing fails.
- *
- * @param {Response} res - The fetch API Response object.
+ * @param {Response} res - The fetch Response object.
  * @returns {Promise<{ ok: true, data: any } | { ok: false, error: string }>}
  */
-export async function handleJsonResponse(res) {
-    const responseText = await res.text(); // Read once
-
-    if (res.ok) {
-        return { ok: true, data: JSON.parse(responseText) };
+export async function handleResponse(res) {
+    const raw = await res.text(); // read body once
+  
+    if (!res.ok) {
+        return { ok: false, error };
     }
 
-    let errorMessage;
+    // Response is OK — try to parse as JSON
     try {
-        const errorJson = JSON.parse(responseText);
-        errorMessage = errorJson.error || JSON.stringify(errorJson);
+      const data = JSON.parse(raw);
+      return { ok: true, data };
     } catch {
-        errorMessage = responseText;
+      return { ok: true, data: raw.trim() }; // fallback to plain text
     }
-
-    return { ok: false, error: errorMessage };
 }
 
 /**
@@ -35,7 +30,7 @@ export async function handleJsonResponse(res) {
 async function safeFetchJson(url, context) {
     try {
         const res = await fetch(url);
-        const result = await handleJsonResponse(res);
+        const result = await handleResponse(res);
   
         if (!result.ok) {
             console.error(`${context}:`, result.error);

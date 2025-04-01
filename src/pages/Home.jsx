@@ -34,7 +34,7 @@ export default function Home() {
       fetchAmount();
   }, []);
 
-  // ✅ Validate Address on Input Change
+  // Validate Address on Input Change
   const handleInputChange = (e) => {
     const value = e.target.value;
     setInputAddress(value);
@@ -48,7 +48,7 @@ export default function Home() {
     }
   };
 
-  // ✅ Copy Address (No State Change)
+  // Copy Address (No State Change)
   const handleCopyAddress = () => {
     if (walletAddress || inputAddress) {
       navigator.clipboard.writeText(walletAddress || inputAddress);
@@ -58,19 +58,19 @@ export default function Home() {
   };
 
   const handleDisconnect = () => {
-    setInputAddress("");  // ✅ Clears manually entered address
-    setIsInputValid(null);  // ✅ Resets validation state
-    disconnectWallet();  // ✅ Clears `walletAddress`
-    setManualEntry(false);  // ✅ Reset back to initial screen
+    setInputAddress("");  // Clears manually entered address
+    setIsInputValid(null);  // Resets validation state
+    disconnectWallet();  // Clears `walletAddress`
+    setManualEntry(false);  // Reset back to initial screen
     setWalletConnected(false);
   };
 
-  // ✅ Claim test BTC by solving Proof of Work challenge
+  // Claim test BTC by solving Proof of Work challenge
   const handleConfirm = async () => {
     setLoading(true);
     setError("");
 
-    // ✅ Step 1: Get PoW challenge from the backend
+    // Step 1: Get PoW challenge from the backend
     const response = await getPowChallenge("l2");
     if (!response) {
       setError("Failed to fetch PoW challenge. Try again.");
@@ -79,9 +79,9 @@ export default function Home() {
     }
 
     setTries(0); // Reset attempt counter
-    setSolvingPoW(true); // ✅ Disable Confirm button while solving
+    setSolvingPoW(true); // Disable Confirm button while solving
 
-    // ✅ Step 2: Find solution using solver.js
+    // Step 2: Find solution using solver.js
     const foundSolution = await findSolution(response.nonce, response.difficulty, setTries);
     if (!foundSolution) {
       setError("Failed to solve challenge.");
@@ -92,29 +92,29 @@ export default function Home() {
 
     setSolvingPoW(false);
 
-    // ✅ Step 3: Submit the claim request
+    // Step 3: Submit the claim request
     const claimResponse = await submitClaim(foundSolution, walletAddress);
     if (!claimResponse) {
       setError("Claim submission failed.");
     } else {
-      // ✅ Step 4: Store the TXID & Mark as Completed
+      // Step 4: Store the TXID & Mark as Completed
       setTxId(claimResponse || "Pending");
     }
-    setCompleted(true); // ✅ Show "Start Over" button
+    setCompleted(true); // Show "Start Over" button
     setLoading(false);
   };
 
-  // ✅ Handle Reset (Start Over)
+  // Handle Reset (Start Over)
   const handleReset = () => {
     setTries(0);
     setLoading(false);
     setSolvingPoW(false);
     setTxId(null);
     setError("");
-    setCompleted(false); // ✅ Reset state to allow new PoW solving
+    setCompleted(false); // Reset state to allow new PoW solving
   };
 
-  // ✅ Step 1: Connect Wallet OR Enter Address
+  // Step 1: Connect Wallet OR Enter Address
   if (!walletAddress && !walletConnected) {
     return (
       <div className="home-container">
@@ -151,17 +151,17 @@ export default function Home() {
     );
   }
 
-  // ✅ Step 2: Show Wallet Info + Confirmation
+  // Step 2: Show Wallet Info + Confirmation
   return (
     <div className="home-container">
       <img src="/logo.png" alt="Strata Logo" className="home-logo" />
 
-      {/* ✅ Wallet Info (Top Right) */}
+      {/* Wallet Info (Top Right) */}
       <div className="wallet-info">
         <AddressBadge address={walletAddress || inputAddress} onDisconnect={handleDisconnect} />
       </div>
 
-      {/* ✅ Confirmation Section */}
+      {/* Confirmation Section */}
       <div className="home-box">
         <div className="home-title">Get test BTC</div>
         <div className="confirmation-grid">
@@ -186,10 +186,10 @@ export default function Home() {
             </span>
           </div>
         </div>
-        {/* ✅ Show Error Message If Needed */}
+        {/* Show Error Message If Needed */}
         {error && <p className="error-message">{error}</p>}
 
-        {/* ✅ Confirm Button → Becomes "Start Over" When Done */}
+        {/* Confirm Button → Becomes "Start Over" When Done */}
         <button 
           className="confirm-button mt-4"
           onClick={completed ? handleReset : handleConfirm} 
