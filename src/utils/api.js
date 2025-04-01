@@ -11,7 +11,7 @@ export async function handleResponse(res) {
     const raw = await res.text(); // read body once
   
     if (!res.ok) {
-        return { ok: false, error };
+        return { ok: false, error: raw };
     }
 
     // Response is OK — try to parse as JSON
@@ -38,11 +38,12 @@ async function safeFetchJson(url, context) {
         }
   
         return result.data;
-    } catch (error) {
-        console.error(`${context}:`, error.message || error);
+    } catch (e) {
+        const errorMessage = e && typeof e === 'object' ? (e.message || JSON.stringify(e)) : String(e);
+        console.error(`${context}:`, errorMessage);
         return null;
     }
-  }
+}
 
 /**
  * Calls the faucet's /pow_challenge endpoint.
@@ -73,6 +74,5 @@ export async function submitClaim(solution, address) {
     );
   
     if (!txid) return null;
-    console.log("Claim TXID:", txid);
     return txid.trim();
 }
