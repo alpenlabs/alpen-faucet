@@ -29,6 +29,8 @@ export default function Home() {
           if (amountInSats) {
               const amountInBTC = (parseInt(amountInSats, 10) / 100_000_000).toFixed(2);
               setClaimAmount(amountInBTC);
+          } else {
+            alert("Failed to fetch claim amount. Check the faucet endpoint is correct.");
           }
       }
       fetchAmount();
