@@ -9,7 +9,7 @@ import "../styles/index.css";
 const STRATA_BLOCKSCOUT_URL = import.meta.env.VITE_STRATA_BLOCKSCOUT_URL;
 
 export default function Home() {
-  const { walletAddress, connectWallet, disconnectWallet } = useWallet();
+  const { walletAddress, connectWallet, connectManual, disconnectWallet } = useWallet();
   const [manualEntry, setManualEntry] = useState(false);
   const [inputAddress, setInputAddress] = useState("");
   const [isInputValid, setIsInputValid] = useState(null);
@@ -45,7 +45,7 @@ export default function Home() {
 
   const handleEnterAddress = () => {
     if (isInputValid) {
-      connectWallet(inputAddress);
+      connectManual(inputAddress);
       setWalletConnected(true);
     }
   };
