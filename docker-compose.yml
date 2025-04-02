@@ -1,0 +1,10 @@
+services:
+  strata-faucet:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: strata_faucet
+    env_file:
+      ./.env
+    ports:
+      - "5173:5173"
