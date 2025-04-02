@@ -25,8 +25,9 @@ export default function Home() {
 
   useEffect(() => {
       async function fetchAmount() {
-          const amountInSats = await getClaimAmount("l2");
-          if (amountInSats) {
+          const res = await getClaimAmount("l2");
+          if (res && res.ok) {
+              const amountInSats = res.data;
               const amountInBTC = (parseInt(amountInSats, 10) / 100_000_000).toFixed(2);
               setClaimAmount(amountInBTC);
           } else {
@@ -73,9 +74,9 @@ export default function Home() {
     setError("");
 
     // Step 1: Get PoW challenge from the backend
-    const response = await getPowChallenge("l2");
-    if (!response) {
-      setError("Failed to fetch PoW challenge. Try again.");
+    const powResponse = await getPowChallenge("l2");
+    if (!powResponse.ok) {
+      setError(`Failed to fetch PoW challenge: ${powResponse.error}. Try again.`);
       setLoading(false);
       return;
     }
@@ -83,10 +84,11 @@ export default function Home() {
     setTries(0); // Reset attempt counter
     setSolvingPoW(true); // Disable Confirm button while solving
 
+    const powChallenge = powResponse.data;
     // Step 2: Find solution using solver.js
-    const foundSolution = await findSolution(response.nonce, response.difficulty, setTries);
-    if (!foundSolution) {
-      setError("Failed to solve challenge.");
+    const solResponse = await findSolution(powChallenge.nonce, powChallenge.difficulty, setTries);
+    if (!solResponse.ok) {
+      setError(`Failed to solve PoW challenge: ${solResponse.error}. Try again.`);
       setLoading(false);
       setSolvingPoW(false);
       return;
@@ -95,12 +97,12 @@ export default function Home() {
     setSolvingPoW(false);
 
     // Step 3: Submit the claim request
-    const claimResponse = await submitClaim(foundSolution, walletAddress);
-    if (!claimResponse) {
-      setError("Claim submission failed.");
+    const claimResponse = await submitClaim(solResponse.data, walletAddress);
+    if (!claimResponse.ok) {
+      setError(`Failed to claim tokens: ${claimResponse.error}.`);
     } else {
       // Step 4: Store the TXID & Mark as Completed
-      setTxId(claimResponse || "Pending");
+      setTxId(claimResponse.data || "Pending");
     }
     setCompleted(true); // Show "Start Over" button
     setLoading(false);

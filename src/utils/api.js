@@ -34,14 +34,13 @@ async function safeFetchJson(url, context) {
   
         if (!result.ok) {
             console.error(`${context}:`, result.error);
-            return null;
+            return { ok: false, error: result.error };
         }
   
-        return result.data;
+        return { ok: true, data: result.data };
     } catch (e) {
-        const errorMessage = e && typeof e === 'object' ? (e.message || JSON.stringify(e)) : String(e);
-        console.error(`${context}:`, errorMessage);
-        return null;
+        console.error(`${context}:`, e);
+        return { ok: false, error: e };
     }
 }
 
@@ -68,11 +67,8 @@ export function getPowChallenge(chain) {
  * @returns {Promise<Object>} Response from the backend.
  */
 export async function submitClaim(solution, address) {
-    const txid = await safeFetchJson(
+    return safeFetchJson(
         `${STRATA_FAUCET_URL}/claim_l2/${solution}/${address}`,
         "Failed to claim test BTC"
     );
-  
-    if (!txid) return null;
-    return txid.trim();
 }
