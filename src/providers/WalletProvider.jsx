@@ -47,7 +47,7 @@ export function WalletProvider({ children }) {
 
   // Connect Manually via Address Entry
   const connectManual = (address) => {
-    setWalletAddress(address); // ✅ Set manually entered address
+    setWalletAddress(address);
   };
 
   // Disconnect Wallet (Clears Both MetaMask & Manual Entry)
