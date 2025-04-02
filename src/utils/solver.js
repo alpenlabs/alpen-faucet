@@ -33,7 +33,7 @@ export async function findSolution(nonce, difficulty, updateAttempts) {
     const hash = await sha256(hashInput);
     updateAttempts(attempts);
     if (countLeadingZeros(hash) >= difficulty) {
-      return Array.from(solution).map(byte => byte.toString(16).padStart(2, '0')).join('');
+      return { ok: true, data: Array.from(solution).map(byte => byte.toString(16).padStart(2, '0')).join('')};
     }
     // Increment solution
     for (let i = 7; i >= 0; i--) {
