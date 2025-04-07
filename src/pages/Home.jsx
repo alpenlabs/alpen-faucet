@@ -51,15 +51,6 @@ export default function Home() {
     }
   };
 
-  // Copy Address (No State Change)
-  const handleCopyAddress = () => {
-    if (walletAddress || inputAddress) {
-      navigator.clipboard.writeText(walletAddress || inputAddress);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
-
   const handleDisconnect = () => {
     setInputAddress("");  // Clears manually entered address
     setIsInputValid(null);  // Resets validation state
@@ -141,19 +132,19 @@ export default function Home() {
                 </p>
               </>
             ) : (
-              <>
+              <div className="address-box">
                 <input
                   type="text"
                   placeholder="Paste your address 0x..."
-                  className={`enter-address ${inputAddress && !isInputValid ? "input-error" : ""}`}
+                  className={`address-input ${inputAddress && !isInputValid ? "input-error" : ""}`}
                   value={inputAddress}
                   onChange={handleInputChange}
                 />
                 {isInputValid === false && <span className="error-message">Invalid entry. Please enter a valid Alpen address.</span>}
-                <button className="enter-button mt-2" disabled={!isInputValid} onClick={handleEnterAddress}>
+                <button className="enter-button" disabled={!isInputValid} onClick={handleEnterAddress}>
                   Enter
                 </button>
-              </>
+              </div>
             )}
           </div>
         </div>
@@ -172,9 +163,7 @@ export default function Home() {
 
       <div className="home-container">
         {/* Wallet Info (Top Right) */}
-        <div className="wallet-info">
-          <AddressBadge address={walletAddress || inputAddress} onDisconnect={handleDisconnect} />
-        </div>
+        <AddressBadge address={walletAddress || inputAddress} onDisconnect={handleDisconnect} />
 
         {/* Confirmation Section */}
         <div className="home-box">
