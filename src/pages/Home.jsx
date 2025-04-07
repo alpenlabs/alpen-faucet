@@ -128,10 +128,10 @@ export default function Home() {
           <div className="home-title">Get test BTC</div>
           {!manualEntry ? (
             <>
-              <button className="home-button" onClick={connectWallet}>
+              <button className="connect-button" onClick={connectWallet}>
                 Connect wallet
               </button>
-              <p className="home-link" onClick={() => setManualEntry(true)}>
+              <p className="enter-address-link" onClick={() => setManualEntry(true)}>
                 or enter address
               </p>
             </>
@@ -140,7 +140,7 @@ export default function Home() {
               <input
                 type="text"
                 placeholder="Paste your address 0x..."
-                className={`home-input ${inputAddress && !isInputValid ? "input-error" : ""}`}
+                className={`enter-address ${inputAddress && !isInputValid ? "input-error" : ""}`}
                 value={inputAddress}
                 onChange={handleInputChange}
               />
@@ -158,7 +158,11 @@ export default function Home() {
   // Step 2: Show Wallet Info + Confirmation
   return (
     <div className="home-container">
-      <img src="/logo.png" alt="Alpen Logo" className="home-logo" />
+      <a href="/" className="logo-wrapper">
+        <div className="logo-svg">
+          <img src="/logo.svg" alt="ALPEN" />
+        </div>
+      </a>
 
       {/* Wallet Info (Top Right) */}
       <div className="wallet-info">
