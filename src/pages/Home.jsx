@@ -17,10 +17,10 @@ export default function Home() {
   const [walletConnected, setWalletConnected] = useState(false);
   const [tries, setTries] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [solvingPoW, setSolvingPoW] = useState(false); // ✅ Track PoW solving
+  const [solvingPoW, setSolvingPoW] = useState(false);
   const [txId, setTxId] = useState(null);
   const [error, setError] = useState("");
-  const [completed, setCompleted] = useState(false); // ✅ Track if claim is done
+  const [completed, setCompleted] = useState(false);
   const [claimAmount, setClaimAmount] = useState(null);
 
   useEffect(() => {
@@ -121,35 +121,41 @@ export default function Home() {
   // Step 1: Connect Wallet OR Enter Address
   if (!walletAddress && !walletConnected) {
     return (
-      <div className="home-container">
-        <img src="/logo.png" alt="Alpen Logo" className="home-logo" />
+      <div>
+        <a href="/" className="logo-wrapper">
+          <div className="logo-svg">
+            <img src="/logo.svg" alt="ALPEN" />
+          </div>
+        </a>
 
-        <div className="home-box">
-          <div className="home-title">Get test BTC</div>
-          {!manualEntry ? (
-            <>
-              <button className="connect-button" onClick={connectWallet}>
-                Connect wallet
-              </button>
-              <p className="enter-address-link" onClick={() => setManualEntry(true)}>
-                or enter address
-              </p>
-            </>
-          ) : (
-            <>
-              <input
-                type="text"
-                placeholder="Paste your address 0x..."
-                className={`enter-address ${inputAddress && !isInputValid ? "input-error" : ""}`}
-                value={inputAddress}
-                onChange={handleInputChange}
-              />
-              {isInputValid === false && <span className="error-message">Invalid entry. Please enter a valid Alpen address.</span>}
-              <button className="enter-button mt-2" disabled={!isInputValid} onClick={handleEnterAddress}>
-                Enter
-              </button>
-            </>
-          )}
+        <div className="home-container">
+          <div className="home-box">
+            <div className="home-title">Get test BTC</div>
+            {!manualEntry ? (
+              <>
+                <button className="connect-button" onClick={connectWallet}>
+                  Connect wallet
+                </button>
+                <p className="enter-address-link" onClick={() => setManualEntry(true)}>
+                  or enter address
+                </p>
+              </>
+            ) : (
+              <>
+                <input
+                  type="text"
+                  placeholder="Paste your address 0x..."
+                  className={`enter-address ${inputAddress && !isInputValid ? "input-error" : ""}`}
+                  value={inputAddress}
+                  onChange={handleInputChange}
+                />
+                {isInputValid === false && <span className="error-message">Invalid entry. Please enter a valid Alpen address.</span>}
+                <button className="enter-button mt-2" disabled={!isInputValid} onClick={handleEnterAddress}>
+                  Enter
+                </button>
+              </>
+            )}
+          </div>
         </div>
       </div>
     );
@@ -157,54 +163,56 @@ export default function Home() {
 
   // Step 2: Show Wallet Info + Confirmation
   return (
-    <div className="home-container">
+    <div>
       <a href="/" className="logo-wrapper">
         <div className="logo-svg">
           <img src="/logo.svg" alt="ALPEN" />
         </div>
       </a>
 
-      {/* Wallet Info (Top Right) */}
-      <div className="wallet-info">
-        <AddressBadge address={walletAddress || inputAddress} onDisconnect={handleDisconnect} />
-      </div>
-
-      {/* Confirmation Section */}
-      <div className="home-box">
-        <div className="home-title">Get test BTC</div>
-        <div className="confirmation-grid">
-          <div className="grid-row">
-            <span className="grid-label">Amount: </span>
-            <span className="grid-value">{claimAmount ? `${claimAmount} BTC` : "-"}</span>
-          </div>
-          <div className="grid-row">
-            <span className="grid-label">Proof of work: </span>
-            <span className="grid-value">{tries > 0 ? `${tries}` : "-"}</span>
-          </div>
-          <div className="grid-row">
-            <span className="grid-label">TXID: </span>
-            <span className="grid-value">
-              {txId ? (
-                <a href={`${ALPEN_BLOCKSCOUT_URL}/tx/${txId}`} target="_blank" rel="noopener noreferrer" className="txid-link">
-                  {txId.slice(0, 6)}...{txId.slice(-4)}
-                </a>
-              ) : (
-                "-"
-              )}
-            </span>
-          </div>
+      <div className="home-container">
+        {/* Wallet Info (Top Right) */}
+        <div className="wallet-info">
+          <AddressBadge address={walletAddress || inputAddress} onDisconnect={handleDisconnect} />
         </div>
-        {/* Show Error Message If Needed */}
-        {error && <p className="error-message">{error}</p>}
 
-        {/* Confirm Button → Becomes "Start Over" When Done */}
-        <button 
-          className="confirm-button mt-4"
-          onClick={completed ? handleReset : handleConfirm} 
-          disabled={loading || solvingPoW}
-        >
-          {completed ? "Start Over" : "Confirm"}
-        </button>
+        {/* Confirmation Section */}
+        <div className="home-box">
+          <div className="home-title">Get test BTC</div>
+          <div className="confirmation-grid">
+            <div className="grid-row">
+              <span className="grid-label">Amount: </span>
+              <span className="grid-value">{claimAmount ? `${claimAmount} BTC` : "-"}</span>
+            </div>
+            <div className="grid-row">
+              <span className="grid-label">Proof of work: </span>
+              <span className="grid-value">{tries > 0 ? `${tries}` : "-"}</span>
+            </div>
+            <div className="grid-row">
+              <span className="grid-label">TXID: </span>
+              <span className="grid-value">
+                {txId ? (
+                  <a href={`${ALPEN_BLOCKSCOUT_URL}/tx/${txId}`} target="_blank" rel="noopener noreferrer" className="txid-link">
+                    {txId.slice(0, 6)}...{txId.slice(-4)}
+                  </a>
+                ) : (
+                  "-"
+                )}
+              </span>
+            </div>
+          </div>
+          {/* Show Error Message If Needed */}
+          {error && <p className="error-message">{error}</p>}
+
+          {/* Confirm Button → Becomes "Start Over" When Done */}
+          <button 
+            className="confirm-button mt-4"
+            onClick={completed ? handleReset : handleConfirm} 
+            disabled={loading || solvingPoW}
+          >
+            {completed ? "Start Over" : "Confirm"}
+          </button>
+        </div>
       </div>
     </div>
   );

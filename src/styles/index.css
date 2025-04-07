@@ -73,7 +73,6 @@ button:focus-visible {
     /* padding: 2rem; */
 }
 
-/* Center the box */
 .home-container {
   display: flex;
   align-items: center;
@@ -83,16 +82,18 @@ button:focus-visible {
 }
 
 .logo-wrapper {
-    display: fixed;
-    top: 20px;
-    left: 20px;
     align-items: center;
     text-decoration: none;
 }
   
 .logo-svg img {
-    max-width: 130px;
-    min-width: 112px;
+    position: fixed;
+    top: 20;
+    left: 20;
+    padding: 1rem;
+    z-index: 1000;
+    min-width: 120px;
+    max-width: 150px;
     height: auto;
 }
 
