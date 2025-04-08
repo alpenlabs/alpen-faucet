@@ -1,0 +1,89 @@
+.walletWrapper {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.walletInfo {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: white;
+  color: black;
+  border: 1px solid #ECECEC;
+  border-radius: 5px;
+  box-shadow: 0px 4px 11px 0px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 1000;
+}
+
+.walletInfo:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.addressButton {
+  all: unset;
+  background: white;
+  color: black;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font: inherit;
+  position: relative;
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: white;
+  overflow: hidden;
+  z-index: 1000;
+  border: 1px solid #ECECEC;
+  border-radius: 5px;
+  box-shadow: 0px 4px 11px 0px rgba(0, 0, 0, 0.08);
+}
+
+.dropdownItem {
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+  background: white;
+  color: black;
+  border: none;
+  width: 100%;
+  font: inherit;
+  cursor: pointer;
+}
+
+.dropdownItem:hover {
+  background-color: #f5f5f5;
+}
+
+.dropdownIcon {
+  margin-left: 8px;
+}
+
+.addressButton:hover .dropdownIcon {
+  transform: rotate(180deg);
+}
+
+.copyMessage {
+  position: absolute;
+  top: 110%;
+  right: 0;
+  background: #f0f0f0;
+  color: #333;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  animation: fadeout 2s ease-out forwards;
+}
