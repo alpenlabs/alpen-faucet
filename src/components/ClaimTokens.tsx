@@ -64,48 +64,46 @@ const ClaimTokens = ({ walletAddress, claimAmount }: ClaimTokensProps) => {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.box}>
-        <div className={styles.title}>Get test BTC</div>
+    <div className={styles.box}>
+      <div className={styles.title}>Get test BTC</div>
 
-        <div className={styles.confirmationGrid}>
-          <div className={styles.gridRow}>
-            <span className={styles.gridLabel}>Amount:</span>
-            <span className={styles.gridValue}>{claimAmount ? `${claimAmount} BTC` : "-"}</span>
-          </div>
-          <div className={styles.gridRow}>
-            <span className={styles.gridLabel}>Proof of Work:</span>
-            <span className={styles.gridValue}>{tries > 0 ? tries : "-"}</span>
-          </div>
-          <div className={styles.gridRow}>
-            <span className={styles.gridLabel}>TXID:</span>
-            <span className={styles.gridValue}>
-              {txId ? (
-                <a
-                  href={`${ALPEN_BLOCKSCOUT_URL}/tx/${txId}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.txidLink}
-                >
-                  {txId.slice(0, 6)}...{txId.slice(-4)}
-                </a>
-              ) : (
-                "-"
-              )}
-            </span>
-          </div>
+      <div className={styles.confirmationGrid}>
+        <div className={styles.gridRow}>
+          <span className={styles.gridLabel}>Amount:</span>
+          <span className={styles.gridValue}>{claimAmount ? `${claimAmount} BTC` : "-"}</span>
         </div>
-
-        {error && <p className={styles.errorMessage}>{error}</p>}
-
-        <button
-          className={styles.confirmButton}
-          onClick={completed ? handleReset : handleConfirm}
-          disabled={loading || solvingPoW}
-        >
-          {completed ? "Start Over" : "Confirm"}
-        </button>
+        <div className={styles.gridRow}>
+          <span className={styles.gridLabel}>Proof of Work:</span>
+          <span className={styles.gridValue}>{tries > 0 ? tries : "-"}</span>
+        </div>
+        <div className={styles.gridRow}>
+          <span className={styles.gridLabel}>TXID:</span>
+          <span className={styles.gridValue}>
+            {txId ? (
+              <a
+                href={`${ALPEN_BLOCKSCOUT_URL}/tx/${txId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.txidLink}
+              >
+                {txId.slice(0, 6)}...{txId.slice(-4)}
+              </a>
+            ) : (
+              "-"
+            )}
+          </span>
+        </div>
       </div>
+
+      {error && <p className={styles.errorMessage}>{error}</p>}
+
+      <button
+        className={styles.confirmButton}
+        onClick={completed ? handleReset : handleConfirm}
+        disabled={loading || solvingPoW}
+      >
+        {completed ? "Start Over" : "Confirm"}
+      </button>
     </div>
   );
 };

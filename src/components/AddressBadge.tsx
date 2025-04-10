@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Copy } from "lucide-react";
 import type { WalletAddress } from "../types/faucet";
 import styles from "../styles/WalletInfo.module.css";
 
@@ -38,7 +38,8 @@ const AddressBadge = ({
       {dropdownOpen && (
         <div className={styles.dropdownMenu}>
           <button onClick={handleCopy} className={styles.dropdownItem}>
-            {copied ? "Copied!" : "Copy"}
+            <Copy className={styles.dropdownIcon} />
+            <span>{copied ? "Copied!" : "Copy"}</span>
           </button>
           <button onClick={onDisconnect} className={styles.dropdownItem}>
             Disconnect

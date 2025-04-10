@@ -25,30 +25,28 @@ const ManualWalletEntry = ({ onManualConnect }: ManualWalletEntryProps) => {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.box}>
-        <div className={styles.title}>Get test BTC</div>
-        <div className={styles.addressBox}>
-          <input
-            type="text"
-            placeholder="Paste your address 0x..."
-            className={`${styles.addressInput} ${inputAddress && !isValid ? styles.inputError : ""}`}
-            value={inputAddress}
-            onChange={handleInputChange}
-          />
-          {isValid === false && (
-            <span className={styles.errorMessage}>
-              Invalid entry. Please enter a valid address.
-            </span>
-          )}
-          <button
-            className={styles.enterButton}
-            disabled={!isValid}
-            onClick={handleManualEnter}
-          >
-            Enter
-          </button>
-        </div>
+    <div className={styles.box}>
+      <div className={styles.title}>Get test BTC</div>
+      <div className={styles.addressBox}>
+        <input
+          type="text"
+          placeholder="Paste your address 0x..."
+          className={`${styles.addressInput} ${inputAddress && !isValid ? styles.inputError : ""}`}
+          value={inputAddress}
+          onChange={handleInputChange}
+        />
+        {isValid === false && (
+          <span className={styles.errorMessage}>
+            Invalid entry. Please enter a valid address.
+          </span>
+        )}
+        <button
+          className={styles.enterButton}
+          disabled={!isValid}
+          onClick={handleManualEnter}
+        >
+          Enter
+        </button>
       </div>
     </div>
   );

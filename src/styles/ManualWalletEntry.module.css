@@ -58,17 +58,21 @@
 
 .enterButton {
   margin-top: 2rem;
-  color: white;
+  color: black;
   width: 40%;
-  background-color: black;
+  background-color: white;
   font-weight: 500;
 }
 
 .enterButton:disabled {
   background-color: lightgray;
-  color: white;
+  color: black;
   cursor: not-allowed;
   width: 40%;
+}
+
+.enterButton:hover {
+  border-color: black;
 }
 
 .errorMessage {

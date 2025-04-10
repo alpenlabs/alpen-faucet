@@ -49,8 +49,88 @@ button {
 button:hover {
     border-color: white;
 }
-  
+
 button:focus,
 button:focus-visible {
     outline: 4px auto white;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: white;
+}
+
+.networkErrorContainer {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.networkErrorBox {
+    background: white;
+    width: 20rem;
+    text-align: left;
+    border-radius: 0;
+    border: 1px solid #ECECEC;
+    box-shadow: 0px 4px 11px rgba(0, 0, 0, 0.08);
+    padding: 1.5rem;
+    font: inherit;
+}
+
+.networkErrorTitle {
+    margin: 0 0 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    font-size: 0.8rem;
+}
+
+.networkErrorText {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+    color: black;
+    font-size: 0.7rem;
+}
+  
+.networkErrorLink {
+    color: black;
+    text-decoration: underline;
+    font-size: 0.7rem;
+}
+  
+.switchButton {
+    margin-top: 0.75rem;
+    background: black;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    font: inherit;
+    cursor: pointer;
+    font-size: 0.7rem;
+}
+
+/* Mobile layout tweaks */
+@media screen and (max-width: 768px) {
+    .networkErrorBox {
+      height: 8rem;
+      width: 60%;
+      padding: 0.75rem;
+    }
+  
+    .networkErrorTitle {
+        font-size: 0.6rem;
+    }
+
+    .networkErrorText, .networkErrorLink {
+        font-size: 0.5rem;
+    }
+
+    .switchButton {
+      width: 30%;
+      font-size: 0.5rem;
+    }
 }
