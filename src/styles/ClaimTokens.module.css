@@ -8,7 +8,7 @@
 
 .box {
   background: white;
-  width: 30rem;
+  width: 40rem;
   min-height: 20rem;
   text-align: center;
   border-radius: 3rem;
@@ -78,13 +78,13 @@
 /* Mobile layout tweaks */
 @media screen and (max-width: 768px) {
   .box {
-    height: 12rem;
+    height: 14rem;
     width: 70%;
-    padding: 1.75rem;
+    padding: 0.75rem;
   }
 
   .confirmButton,
   .confirmButton:disabled {
-    width: 80%;
+    width: 70%;
   }
 }

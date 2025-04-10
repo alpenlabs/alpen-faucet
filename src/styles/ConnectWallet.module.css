@@ -8,7 +8,7 @@
 
 .box {
   background: white;
-  width: 30rem;
+  width: 40rem;
   height: 20rem;
   text-align: center;
   border-radius: 3rem;
@@ -48,13 +48,13 @@
   }
 
   .connectButton {
-    width: 80%;
+    width: 70%;
   }
 }
 
 @media screen and (max-width: 768px) {
   .box {
-    height: 12rem;
+    height: 14rem;
     width: 70%;
     padding: 1.75rem;
   }
