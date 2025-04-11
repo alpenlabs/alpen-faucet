@@ -18,6 +18,10 @@
   color: black;
 }
 
+.title span {
+  display: block;
+}
+
 .connectButton {
   margin-top: 2rem;
   color: white;

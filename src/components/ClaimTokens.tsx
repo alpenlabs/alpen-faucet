@@ -73,6 +73,19 @@ const ClaimTokens = ({ walletAddress, claimAmount }: ClaimTokensProps) => {
           <span className={styles.gridValue}>{claimAmount ? `${claimAmount} BTC` : "-"}</span>
         </div>
         <div className={styles.gridRow}>
+          <span className={styles.gridLabel}>Address:</span>
+          <span className={styles.gridValue}>
+            <a
+              href={`${ALPEN_BLOCKSCOUT_URL}/address/${walletAddress}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.txidLink}
+            >
+              {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}
+            </a>
+          </span>
+        </div>
+        <div className={styles.gridRow}>
           <span className={styles.gridLabel}>Proof of Work:</span>
           <span className={styles.gridValue}>{tries > 0 ? tries : "-"}</span>
         </div>

@@ -95,39 +95,70 @@ export const WalletProvider = ({ children }: WalletProviderProps) => {
     setIsOnAlpenTestnet(false);
   };
 
+  const trySwitchToAlpen = async () => {
+    if (typeof window === "undefined" || !window.ethereum) {
+      alert("No EVM-compatible wallet detected.");
+      return;
+    }
+
+    await window.ethereum.request({
+      method: "wallet_switchEthereumChain",
+      params: [{ chainId: ALPEN_TESTNET_CHAIN_ID }],
+    });
+  };
+
+  const tryAddAlpenNetwork = async (): Promise<boolean> => {
+    if (typeof window === "undefined" || !window.ethereum) {
+      alert("No EVM-compatible wallet detected.");
+      return false;
+    }
+
+    try {
+      await window.ethereum.request({
+        method: "wallet_addEthereumChain",
+        params: [ALPEN_TESTNET_PARAMS],
+      });
+      return true;
+    } catch (addError) {
+      console.warn("⚠️ Add network threw:", addError);
+  
+      // Double-check if it was actually added
+      try {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const currentNetwork = await provider.getNetwork();
+  
+        if (currentNetwork.chainId === ALPEN_TESTNET_CHAIN_ID_BIGINT) {
+          console.log("Network was added despite error");
+          return true;
+        }
+      } catch (networkCheckError) {
+        console.error("Failed to check network", networkCheckError);
+      }
+  
+      return false;
+    }
+  };
 
   const switchToAlpenTestnet = async () => {
     if (typeof window === "undefined" || !window.ethereum) {
       alert("No EVM-compatible wallet detected.");
       return;
     }
-
     try {
-      await window.ethereum.request({
-        method: "wallet_switchEthereumChain",
-        params: [{ chainId: ALPEN_TESTNET_CHAIN_ID }],
-      });
+      await trySwitchToAlpen();
     } catch (switchError: any) {
       // Unrecognized chain ID.
       if (switchError.code === 4902) {
-        try {
-          await window.ethereum.request({
-            method: "wallet_addEthereumChain",
-            params: [ALPEN_TESTNET_PARAMS],
-          });
-        } catch (addError) {
-          console.error("User rejected adding Alpen Testnet", addError);
-        }
-
-        try {
-          // Switch the network
-          await window.ethereum.request({
-            method: "wallet_switchEthereumChain",
-            params: [{ chainId: ALPEN_TESTNET_CHAIN_ID }],
-          });
-        } catch (switchError) {
-          console.error("Failed to switch to added network", switchError);
-          alert("Failed to switch network. Please switch the network manually.");
+        const networkAdded = await tryAddAlpenNetwork();
+        // After adding, try switching again
+        if (networkAdded) {
+          try {
+            await trySwitchToAlpen();
+            console.log("Switched to Alpen Testnet after adding");
+          } catch (switchAgainError) {
+            console.error("Failed to switch after adding", switchAgainError);
+            alert("The network was added, but switching failed. Please switch manually in your wallet.");
+          }
         }
       } else {
         console.error("Failed to switch to Alpen Testnet", switchError);

@@ -44,7 +44,6 @@
 
 .txidLink {
   text-decoration: underline;
-  color: var(--strata-terracotta-med, #dd6b4d);
 }
 
 .errorMessage {

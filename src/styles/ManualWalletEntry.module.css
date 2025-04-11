@@ -26,6 +26,10 @@
   color: black;
 }
 
+.title span {
+  display: block;
+}
+
 .addressBox {
   position: relative;
   display: flex;
@@ -37,7 +41,6 @@
 
 .addressInput {
   flex-grow: 1;
-  margin-top: 2rem;
   padding: 10px 15px;
   border: 0.5px solid #718096;
   border-radius: 7px;

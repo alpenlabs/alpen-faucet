@@ -26,7 +26,10 @@ const ManualWalletEntry = ({ onManualConnect }: ManualWalletEntryProps) => {
 
   return (
     <div className={styles.box}>
-      <div className={styles.title}>Get test BTC</div>
+      <div className={styles.title}>
+        <span>Get test BTC</span>
+        <span>for Alpen Testnet</span>
+      </div>
       <div className={styles.addressBox}>
         <input
           type="text"

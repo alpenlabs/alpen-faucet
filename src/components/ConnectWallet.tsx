@@ -8,7 +8,10 @@ interface ConnectWalletProps {
 const ConnectWallet = ({ onConnect, onManual }: ConnectWalletProps) => {
   return (
     <div className={styles.box}>
-      <div className={styles.title}>Get test BTC</div>
+      <div className={styles.title}>
+        <span>Get test BTC</span>
+        <span>for Alpen Testnet</span>
+      </div>
       <button className={styles.connectButton} onClick={onConnect}>
         Connect wallet
       </button>
