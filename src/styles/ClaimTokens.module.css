@@ -42,7 +42,7 @@
   text-align: left;
 }
 
-.txidLink {
+.addressLink, .txidLink {
   text-decoration: underline;
 }
 

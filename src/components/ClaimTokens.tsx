@@ -79,7 +79,7 @@ const ClaimTokens = ({ walletAddress, claimAmount }: ClaimTokensProps) => {
               href={`${ALPEN_BLOCKSCOUT_URL}/address/${walletAddress}`}
               target="_blank"
               rel="noopener noreferrer"
-              className={styles.txidLink}
+              className={styles.addressLink}
             >
               {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}
             </a>

@@ -23,12 +23,12 @@ main {
   
 a {
     font-weight: 500;
-    color: black;
+    color: #594fcc;
     text-decoration: inherit;
 }
   
 a:hover {
-    color: black;
+    color: #594fcc;
 }
   
 h1 {
@@ -97,7 +97,7 @@ button:focus-visible {
 }
   
 .networkErrorLink {
-    color: black;
+    color: #594fcc;
     text-decoration: underline;
     font-size: 0.7rem;
 }
