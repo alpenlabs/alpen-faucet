@@ -65,7 +65,7 @@ export const WalletProvider = ({ children }: WalletProviderProps) => {
         return;
       }
 
-      const newProvider = new ethers.BrowserProvider(window.ethereum);
+      const newProvider = new ethers.BrowserProvider(window.ethereum, "any");
       setProvider(newProvider);
       checkNetwork(ethProvider);
     });
