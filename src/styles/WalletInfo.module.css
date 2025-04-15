@@ -1,0 +1,80 @@
+.walletWrapper {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.walletInfo {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: black;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 1000;
+  border: 1px solid black;
+  border-radius: 5px;
+  box-shadow: 0px 4px 11px 0px rgba(0, 0, 0, 0.08);
+}
+
+.walletInfo:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.addressButton {
+  all: unset;
+  background: black;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid black;
+  border-radius: 5px;
+  box-shadow: 0px 4px 11px 0px rgba(0, 0, 0, 0.08);
+  font: inherit;
+  position: relative;
+}
+
+.dropdownMenu {
+  position: absolute;
+  margin-top: 0.5rem;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: black;
+  overflow: hidden;
+  z-index: 1000;
+  border: 1px solid black;
+  border-radius: 5px;
+  box-shadow: 0px 4px 11px 0px rgba(0, 0, 0, 0.08);
+}
+
+.dropdownItem {
+  all: unset;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  background: black;
+  color: white;
+  width: 100%;
+  cursor: pointer;
+}
+
+.dropdownIcon {
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+.addressButton:hover .dropdownIcon {
+  transform: rotate(180deg);
+}
