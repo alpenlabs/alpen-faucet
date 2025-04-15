@@ -19,6 +19,10 @@
   color: black;
 }
 
+.title span {
+  display: block;
+}
+
 .confirmationGrid {
   display: grid;
   grid-auto-rows: minmax(24px, auto);

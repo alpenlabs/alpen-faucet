@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { ethers } from "ethers";
 import {
-  ALPEN_TESTNET_CHAIN_ID,
+  ALPEN_TESTNET_CHAIN_ID_HEX,
   ALPEN_TESTNET_CHAIN_ID_BIGINT,
   ALPEN_TESTNET_PARAMS,
 } from "../constants/alpen-testnet";
@@ -43,11 +43,17 @@ export const WalletProvider = ({ children }: WalletProviderProps) => {
       return;
     }
   
-    const ethProvider = new ethers.BrowserProvider(window.ethereum);
+    const ethProvider = new ethers.BrowserProvider(window.ethereum, "any");
     setProvider(ethProvider);
   
     checkNetwork(ethProvider);
   
+    ethProvider.on('network', (newNetwork, oldNetwork) => {
+      if (oldNetwork) {
+        checkNetwork(ethProvider);
+      }
+    });
+
     window.ethereum.on?.("accountsChanged", (accounts: string[]) => {
       setWalletAddress(accounts[0] ?? null);
       checkNetwork(ethProvider);
@@ -103,7 +109,7 @@ export const WalletProvider = ({ children }: WalletProviderProps) => {
 
     await window.ethereum.request({
       method: "wallet_switchEthereumChain",
-      params: [{ chainId: ALPEN_TESTNET_CHAIN_ID }],
+      params: [{ chainId: ALPEN_TESTNET_CHAIN_ID_HEX }],
     });
   };
 
@@ -120,7 +126,7 @@ export const WalletProvider = ({ children }: WalletProviderProps) => {
       });
       return true;
     } catch (addError) {
-      console.warn("⚠️ Add network threw:", addError);
+      console.warn("Add network threw:", addError);
   
       // Double-check if it was actually added
       try {

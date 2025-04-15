@@ -65,7 +65,10 @@ const ClaimTokens = ({ walletAddress, claimAmount }: ClaimTokensProps) => {
 
   return (
     <div className={styles.box}>
-      <div className={styles.title}>Get test BTC</div>
+      <div className={styles.title}>
+        <span>Get test BTC</span>
+        <span>for Alpen Testnet</span>
+      </div>
 
       <div className={styles.confirmationGrid}>
         <div className={styles.gridRow}>

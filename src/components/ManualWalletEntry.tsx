@@ -33,14 +33,14 @@ const ManualWalletEntry = ({ onManualConnect }: ManualWalletEntryProps) => {
       <div className={styles.addressBox}>
         <input
           type="text"
-          placeholder="Paste your address 0x..."
+          placeholder="Enter your address"
           className={`${styles.addressInput} ${inputAddress && !isValid ? styles.inputError : ""}`}
           value={inputAddress}
           onChange={handleInputChange}
         />
         {isValid === false && (
           <span className={styles.errorMessage}>
-            Invalid entry. Please enter a valid address.
+            Invalid entry. Please enter a valid Alpen address.
           </span>
         )}
         <button

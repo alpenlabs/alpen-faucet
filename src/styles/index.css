@@ -41,18 +41,19 @@ button {
     font-weight: 500;
     padding: 0.6em 1.2em;
     border-radius: 7px;
+    border: 1px solid #ECECEC;
     background-color: black;
     color: white;
     cursor: pointer;
 }
   
 button:hover {
-    border-color: white;
+    border-color: #ECECEC;;
 }
 
 button:focus,
 button:focus-visible {
-    outline: 4px auto white;
+    outline: 4px auto ECECEC;
 }
 
 .container {

@@ -1,8 +1,9 @@
-export const ALPEN_TESTNET_CHAIN_ID = "0x3039"; // 12345 in hex
-export const ALPEN_TESTNET_CHAIN_ID_BIGINT = 12345n;
+const ALPEN_TESTNET_CHAIN_ID_DEC = 2892;
+export const ALPEN_TESTNET_CHAIN_ID_HEX = `0x${ALPEN_TESTNET_CHAIN_ID_DEC.toString(16)}`;
+export const ALPEN_TESTNET_CHAIN_ID_BIGINT = BigInt(ALPEN_TESTNET_CHAIN_ID_DEC);
 
 export const ALPEN_TESTNET_PARAMS = {
-  chainId: ALPEN_TESTNET_CHAIN_ID,
+  chainId: ALPEN_TESTNET_CHAIN_ID_HEX,
   chainName: "Alpen Testnet",
   nativeCurrency: {
     name: "Alpen Testnet BTC",
