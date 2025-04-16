@@ -86,17 +86,18 @@
 
 @media screen and (max-width: 768px) {
   .box {
-    height: 14rem;
-    width: 70%;
-    padding: 1.75rem;
+    outline: none;
+    border: none;
+    box-shadow: none;
+    width: 100%;
   }
 
   .enterButton, .enterButton:disabled {
-    width: 70%;
+    width: 50%;
   }
 
   .addressInput {
     width: 90%;
-    font-size: 0.55rem;
+    font-size: 0.6rem;
   }
 }

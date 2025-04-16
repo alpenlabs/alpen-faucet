@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { getPowChallenge, submitClaim } from "../utils/api";
 import { findSolution } from "../utils/solver";
 import { FaucetResult, PowChallenge } from "../types/faucet";
@@ -9,15 +9,24 @@ const ALPEN_BLOCKSCOUT_URL = import.meta.env.VITE_ALPEN_BLOCKSCOUT_URL;
 interface ClaimTokensProps {
   walletAddress: string;
   claimAmount: string | null;
+  claimAmountloading: boolean;
 }
 
-const ClaimTokens = ({ walletAddress, claimAmount }: ClaimTokensProps) => {
+const ClaimTokens = ({ walletAddress, claimAmount, claimAmountloading }: ClaimTokensProps) => {
   const [tries, setTries] = useState(0);
   const [loading, setLoading] = useState(false);
   const [solvingPoW, setSolvingPoW] = useState(false);
   const [txId, setTxId] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [completed, setCompleted] = useState(false);
+
+  useEffect(() => {
+    if (!claimAmount && !claimAmountloading) {
+      setError("Failed to fetch claim amount.");
+    } else {
+      setError("");
+    }
+  }, [claimAmount]);
 
   const handleConfirm = async () => {
     setLoading(true);
@@ -116,7 +125,7 @@ const ClaimTokens = ({ walletAddress, claimAmount }: ClaimTokensProps) => {
       <button
         className={styles.confirmButton}
         onClick={completed ? handleReset : handleConfirm}
-        disabled={loading || solvingPoW}
+        disabled={error !== "" || loading || solvingPoW}
       >
         {completed ? "Start Over" : "Confirm"}
       </button>

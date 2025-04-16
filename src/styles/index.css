@@ -96,13 +96,13 @@ button:focus-visible {
     color: black;
     font-size: 0.7rem;
 }
-  
+
 .networkErrorLink {
     color: #594fcc;
     text-decoration: underline;
     font-size: 0.7rem;
 }
-  
+
 .switchButton {
     margin-top: 0.75rem;
     background: black;

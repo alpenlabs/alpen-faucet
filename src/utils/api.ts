@@ -3,6 +3,13 @@ import { FaucetResult, PowChallenge, ClaimTxid } from "../types/faucet";
 const ALPEN_FAUCET_API_URL = import.meta.env.VITE_ALPEN_FAUCET_API_URL;
 
 /**
+ * Checks if faucet URL is set as an environment variable.
+ */
+function isFaucetUrlSet(): boolean {
+  return typeof ALPEN_FAUCET_API_URL !== "undefined";
+}
+
+/**
  * Handles a fetch response, detecting JSON or plain text, and returns a typed result.
  */
 export async function handleResponse<T>(res: Response): Promise<FaucetResult<T>> {
@@ -24,6 +31,10 @@ export async function handleResponse<T>(res: Response): Promise<FaucetResult<T>>
  * Wraps a fetch call with standard error handling and logging.
  */
 async function safeFetchJson<T>(url: string, context: string): Promise<FaucetResult<T>> {
+  if (!isFaucetUrlSet()) {
+    return Promise.resolve({ ok: false, error: "faucet api url: " + ALPEN_FAUCET_API_URL });
+  }
+
   try {
     const res = await fetch(url);
     const result = await handleResponse<T>(res);

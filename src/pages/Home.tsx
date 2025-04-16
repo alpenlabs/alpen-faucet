@@ -22,6 +22,7 @@ const Home = () => {
   const [walletTriedToConnect, setWalletTriedToConnect] = useState(false);
   const [walletConnected, setWalletConnected] = useState(false);
   const [claimAmount, setClaimAmount] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   // Fetch claimable amount on load
   useEffect(() => {
@@ -34,13 +35,22 @@ const Home = () => {
     }
 
     async function fetchAmount() {
-      const res: FaucetResult<string> = await getClaimAmount("l2");
-      if (res.ok) {
-        const sats = parseInt(res.data, 10);
-        const btc = (sats / 100_000_000).toFixed(2);
-        setClaimAmount(btc);
-      } else {
-        alert("Failed to fetch claim amount. Check the faucet endpoint.");
+      try {
+        const res: FaucetResult<string> = await getClaimAmount("l2");
+        if (res.ok) {
+          const sats = parseInt(res.data, 10);
+          const btc = (sats / 100_000_000).toFixed(2);
+          console.log(`Claim amount: ${btc} BTC`);
+          setClaimAmount(btc);
+        } else {
+          console.error("Failed to fetch claim amount:", res.error);
+          setClaimAmount(null);
+        }
+      } catch (err) {
+        console.error("Failed to fetch claim amount:", err);
+        setClaimAmount(null);
+      } finally {
+        setLoading(false);
       }
     }
 
@@ -95,8 +105,6 @@ const Home = () => {
               </div>
             </div>
           )}
-      
-          
           {!manualEntry ? (
             <ConnectWallet
               onConnect={async () => {
@@ -110,7 +118,7 @@ const Home = () => {
           )}
         </>
         ) : isOnAlpenTestnet ? (
-          <ClaimTokens walletAddress={walletAddress!} claimAmount={claimAmount} />
+          <ClaimTokens walletAddress={walletAddress!} claimAmount={claimAmount} claimAmountloading={loading} />
         ) : null}
       </div>
     </>

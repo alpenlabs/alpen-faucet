@@ -38,9 +38,10 @@
 
 @media screen and (max-width: 768px) {
   .box {
-    height: 14rem;
-    width: 70%;
-    padding: 1.75rem;
+    outline: none;
+    border: none;
+    box-shadow: none;
+    width: 100%;
   }
 
   .connectButton {
