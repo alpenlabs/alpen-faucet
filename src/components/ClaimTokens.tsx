@@ -9,10 +9,10 @@ const ALPEN_BLOCKSCOUT_URL = import.meta.env.VITE_ALPEN_BLOCKSCOUT_URL;
 interface ClaimTokensProps {
   walletAddress: string;
   claimAmount: string | null;
-  claimAmountloading: boolean;
+  claimAmountError: boolean;
 }
 
-const ClaimTokens = ({ walletAddress, claimAmount, claimAmountloading }: ClaimTokensProps) => {
+const ClaimTokens = ({ walletAddress, claimAmount, claimAmountError }: ClaimTokensProps) => {
   const [tries, setTries] = useState(0);
   const [loading, setLoading] = useState(false);
   const [solvingPoW, setSolvingPoW] = useState(false);
@@ -21,12 +21,12 @@ const ClaimTokens = ({ walletAddress, claimAmount, claimAmountloading }: ClaimTo
   const [completed, setCompleted] = useState(false);
 
   useEffect(() => {
-    if (!claimAmount && !claimAmountloading) {
+    if (claimAmountError) {
       setError("Failed to fetch claim amount.");
     } else {
       setError("");
     }
-  }, [claimAmount]);
+  }, [claimAmountError]);
 
   const handleConfirm = async () => {
     setLoading(true);
