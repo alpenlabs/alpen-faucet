@@ -1,103 +1,104 @@
 .container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: white;
 }
 
 .box {
-  background: white;
-  width: 40rem;
-  height: 20rem;
-  text-align: center;
-  border-radius: 3rem;
-  border: 1px solid #ECECEC;
-  box-shadow: 0px 4px 11px rgba(0, 0, 0, 0.08);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+    background: white;
+    width: 40rem;
+    height: 20rem;
+    text-align: center;
+    border-radius: 3rem;
+    border: 1px solid #ececec;
+    box-shadow: 0px 4px 11px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .title {
-  font-weight: bold;
-  margin-bottom: 2rem;
-  color: black;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    color: black;
 }
 
 .title span {
-  display: block;
+    display: block;
 }
 
 .addressBox {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  width: 90%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 90%;
 }
 
 .addressInput {
-  flex-grow: 1;
-  padding: 10px 15px;
-  border: 0.5px solid #718096;
-  border-radius: 7px;
-  box-shadow: 0px 4px 11px rgba(0, 0, 0, 0.08);
-  font-size: 1rem;
-  text-align: center;
-  background-color: white;
-  color: grey;
-  width: 70%;
+    flex-grow: 1;
+    padding: 10px 15px;
+    border: 0.5px solid #718096;
+    border-radius: 7px;
+    box-shadow: 0px 4px 11px rgba(0, 0, 0, 0.08);
+    font-size: 1rem;
+    text-align: center;
+    background-color: white;
+    color: grey;
+    width: 70%;
 }
 
 .addressInput:focus {
-  outline: none;
+    outline: none;
 }
 
 .inputError {
-  border: 1px solid red;
+    border: 1px solid red;
 }
 
 .enterButton {
-  margin-top: 2rem;
-  color: black;
-  width: 40%;
-  background-color: white;
-  font-weight: 500;
+    margin-top: 2rem;
+    color: black;
+    width: 40%;
+    background-color: white;
+    font-weight: 500;
 }
 
 .enterButton:disabled {
-  background-color: lightgray;
-  color: black;
-  cursor: not-allowed;
-  width: 40%;
+    background-color: lightgray;
+    color: black;
+    cursor: not-allowed;
+    width: 40%;
 }
 
 .enterButton:hover {
-  border-color: black;
+    border-color: black;
 }
 
 .errorMessage {
-  color: red;
-  font-size: 0.875rem;
+    color: red;
+    font-size: 0.875rem;
 }
 
 @media screen and (max-width: 768px) {
-  .box {
-    outline: none;
-    border: none;
-    box-shadow: none;
-    width: 100%;
-  }
+    .box {
+        outline: none;
+        border: none;
+        box-shadow: none;
+        width: 100%;
+    }
 
-  .enterButton, .enterButton:disabled {
-    width: 50%;
-  }
+    .enterButton,
+    .enterButton:disabled {
+        width: 50%;
+    }
 
-  .addressInput {
-    width: 90%;
-    font-size: 0.6rem;
-  }
+    .addressInput {
+        width: 90%;
+        font-size: 0.6rem;
+    }
 }

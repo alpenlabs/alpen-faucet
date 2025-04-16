@@ -1,13 +1,13 @@
 // Faucet challenge response
 export interface PowChallenge {
-  nonce: string;
-  difficulty: number;
+    nonce: string;
+    difficulty: number;
 }
 
 // Result type for success or error
 export type FaucetResult<T> =
-  | { ok: true; data: T }
-  | { ok: false; error: string };
+    | { ok: true; data: T }
+    | { ok: false; error: string };
 
 // Wallet address (manual or connected)
 export type WalletAddress = string;

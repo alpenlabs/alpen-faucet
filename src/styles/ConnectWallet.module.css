@@ -1,50 +1,50 @@
 .box {
-  background: white;
-  width: 40rem;
-  height: 20rem;
-  text-align: center;
-  border-radius: 3rem;
-  border: 1px solid #ECECEC;
-  box-shadow: 0px 4px 11px rgba(0, 0, 0, 0.08);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+    background: white;
+    width: 40rem;
+    height: 20rem;
+    text-align: center;
+    border-radius: 3rem;
+    border: 1px solid #ececec;
+    box-shadow: 0px 4px 11px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .title {
-  font-weight: bold;
-  margin-bottom: 2rem;
-  color: black;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    color: black;
 }
 
 .title span {
-  display: block;
+    display: block;
 }
 
 .connectButton {
-  margin-top: 2rem;
-  color: white;
-  width: 50%;
-  background-color: black;
+    margin-top: 2rem;
+    color: white;
+    width: 50%;
+    background-color: black;
 }
 
 .manualEntryLink {
-  margin-top: 1rem;
-  color: black;
-  text-decoration: underline;
-  cursor: pointer;
+    margin-top: 1rem;
+    color: black;
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 @media screen and (max-width: 768px) {
-  .box {
-    outline: none;
-    border: none;
-    box-shadow: none;
-    width: 100%;
-  }
+    .box {
+        outline: none;
+        border: none;
+        box-shadow: none;
+        width: 100%;
+    }
 
-  .connectButton {
-    width: 70%;
-  }
+    .connectButton {
+        width: 70%;
+    }
 }

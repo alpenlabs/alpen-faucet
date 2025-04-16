@@ -1,85 +1,86 @@
 .box {
-  background: white;
-  width: 40rem;
-  min-height: 20rem;
-  text-align: center;
-  border-radius: 3rem;
-  border: 1px solid #ECECEC;
-  box-shadow: 0px 4px 11px rgba(0, 0, 0, 0.08);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+    background: white;
+    width: 40rem;
+    min-height: 20rem;
+    text-align: center;
+    border-radius: 3rem;
+    border: 1px solid #ececec;
+    box-shadow: 0px 4px 11px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .title {
-  font-weight: bold;
-  margin-bottom: 2rem;
-  color: black;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    color: black;
 }
 
 .title span {
-  display: block;
+    display: block;
 }
 
 .confirmationGrid {
-  display: grid;
-  grid-auto-rows: minmax(24px, auto);
-  align-items: right;
+    display: grid;
+    grid-auto-rows: minmax(24px, auto);
+    align-items: right;
 }
 
 .gridRow {
-  display: grid;
-  grid-template-columns: max-content auto;
-  gap: 12px;
+    display: grid;
+    grid-template-columns: max-content auto;
+    gap: 12px;
 }
 
 .gridLabel {
-  min-width: 120px;
-  text-align: right;
-  font-weight: 500;
+    min-width: 120px;
+    text-align: right;
+    font-weight: 500;
 }
 
 .gridValue {
-  min-width: 120px;
-  text-align: left;
+    min-width: 120px;
+    text-align: left;
 }
 
-.addressLink, .txidLink {
-  text-decoration: underline;
+.addressLink,
+.txidLink {
+    text-decoration: underline;
 }
 
 .errorMessage {
-  color: red;
-  font-size: 0.875rem;
-  margin-top: 1rem;
+    color: red;
+    font-size: 0.875rem;
+    margin-top: 1rem;
 }
 
 .confirmButton {
-  margin-top: 2rem;
-  color: white;
-  background-color: black;
-  width: 25%;
-  font-weight: 500;
+    margin-top: 2rem;
+    color: white;
+    background-color: black;
+    width: 25%;
+    font-weight: 500;
 }
 
 .confirmButton:disabled {
-  color: white;
-  background-color: gray;
-  cursor: not-allowed;
+    color: white;
+    background-color: gray;
+    cursor: not-allowed;
 }
 
 /* Mobile layout tweaks */
 @media screen and (max-width: 768px) {
-  .box {
-    outline: none;
-    border: none;
-    box-shadow: none;
-    width: 90%;
-  }
+    .box {
+        outline: none;
+        border: none;
+        box-shadow: none;
+        width: 90%;
+    }
 
-  .confirmButton,
-  .confirmButton:disabled {
-    width: 50%;
-  }
+    .confirmButton,
+    .confirmButton:disabled {
+        width: 50%;
+    }
 }
