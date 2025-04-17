@@ -11,7 +11,6 @@ import "../styles/index.css";
 
 const Home = () => {
     const {
-        setInitializeWalletProvider,
         walletAddress,
         connectWallet,
         connectManual,
@@ -71,7 +70,6 @@ const Home = () => {
         disconnectWallet();
         setManualEntry(false);
         setWalletConnected(false);
-        setInitializeWalletProvider(false);
     };
 
     return (
@@ -125,7 +123,6 @@ const Home = () => {
                         {!manualEntry ? (
                             <ConnectWallet
                                 onConnect={async () => {
-                                    setInitializeWalletProvider(true);
                                     await connectWallet();
                                     setWalletTriedToConnect(true);
                                 }}
