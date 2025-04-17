@@ -9,12 +9,14 @@ const ALPEN_BLOCKSCOUT_URL = import.meta.env.VITE_ALPEN_BLOCKSCOUT_URL;
 interface ClaimTokensProps {
     walletAddress: string;
     claimAmount: string | null;
+    manualEntry: boolean;
     claimAmountError: boolean;
 }
 
 const ClaimTokens = ({
     walletAddress,
     claimAmount,
+    manualEntry,
     claimAmountError,
 }: ClaimTokensProps) => {
     const [tries, setTries] = useState(0);
@@ -94,20 +96,22 @@ const ClaimTokens = ({
                         {claimAmount ? `${claimAmount} BTC` : "-"}
                     </span>
                 </div>
-                <div className={styles.gridRow}>
-                    <span className={styles.gridLabel}>Address:</span>
-                    <span className={styles.gridValue}>
-                        <a
-                            href={`${ALPEN_BLOCKSCOUT_URL}/address/${walletAddress}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={styles.addressLink}
-                        >
-                            {walletAddress.slice(0, 6)}...
-                            {walletAddress.slice(-4)}
-                        </a>
-                    </span>
-                </div>
+                {manualEntry && (
+                    <div className={styles.gridRow}>
+                        <span className={styles.gridLabel}>Address:</span>
+                        <span className={styles.gridValue}>
+                            <a
+                                href={`${ALPEN_BLOCKSCOUT_URL}/address/${walletAddress}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={styles.addressLink}
+                            >
+                                {walletAddress.slice(0, 6)}...
+                                {walletAddress.slice(-4)}
+                            </a>
+                        </span>
+                    </div>
+                )}
                 <div className={styles.gridRow}>
                     <span className={styles.gridLabel}>Proof of Work:</span>
                     <span className={styles.gridValue}>

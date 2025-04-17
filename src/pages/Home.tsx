@@ -11,6 +11,7 @@ import "../styles/index.css";
 
 const Home = () => {
     const {
+        setInitializeWalletProvider,
         walletAddress,
         connectWallet,
         connectManual,
@@ -23,13 +24,13 @@ const Home = () => {
     const [walletConnected, setWalletConnected] = useState(false);
     const [claimAmount, setClaimAmount] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
+    const [claimAmountError, setClaimAmountError] = useState(false);
 
     // Fetch claimable amount on load
     useEffect(() => {
         if (!walletAddress) return; // only run when wallet is connected
 
-        if (walletAddress && isOnAlpenTestnet) {
+        if (walletAddress && isOnAlpenTestnet && !manualEntry) {
             setWalletConnected(true);
         } else {
             setWalletConnected(false);
@@ -44,51 +45,49 @@ const Home = () => {
                     const btc = (sats / 100_000_000).toFixed(2);
                     console.log(`Claim amount: ${btc} BTC`);
                     setClaimAmount(btc);
-                    setError(false);
+                    setClaimAmountError(false);
                 } else {
                     console.error("Failed to fetch claim amount:", res.error);
                     setClaimAmount(null);
-                    setError(true);
+                    setClaimAmountError(true);
                 }
             } catch (err) {
                 console.error("Failed to fetch claim amount:", err);
                 setClaimAmount(null);
-                setError(true);
+                setClaimAmountError(true);
             } finally {
                 setLoading(false);
             }
         }
 
         fetchAmount();
-    }, [walletAddress, isOnAlpenTestnet]);
+    }, [manualEntry, walletAddress, isOnAlpenTestnet]);
 
     const handleManualConnect = (address: WalletAddress) => {
         connectManual(address);
-        setWalletConnected(true);
     };
 
     const handleDisconnect = () => {
         disconnectWallet();
         setManualEntry(false);
         setWalletConnected(false);
+        setInitializeWalletProvider(false);
     };
-
-    const addressToShow = walletAddress || undefined;
 
     return (
         <>
             <Header />
 
             {/* Show wallet info at top-right when connected */}
-            {walletConnected && addressToShow && (
+            {walletConnected && walletAddress && (
                 <WalletInfo
-                    address={addressToShow}
+                    address={walletAddress}
                     onDisconnect={handleDisconnect}
                 />
             )}
 
             <div className="container">
-                {!walletConnected ? (
+                {!walletAddress ? (
                     <>
                         {!manualEntry &&
                             walletTriedToConnect &&
@@ -126,6 +125,7 @@ const Home = () => {
                         {!manualEntry ? (
                             <ConnectWallet
                                 onConnect={async () => {
+                                    setInitializeWalletProvider(true);
                                     await connectWallet();
                                     setWalletTriedToConnect(true);
                                 }}
@@ -141,7 +141,8 @@ const Home = () => {
                     <ClaimTokens
                         walletAddress={walletAddress!}
                         claimAmount={claimAmount}
-                        claimAmountError={error}
+                        manualEntry={manualEntry}
+                        claimAmountError={claimAmountError}
                     />
                 ) : null}
             </div>
