@@ -33,18 +33,37 @@ export const WalletProvider = ({ children }: WalletProviderProps) => {
     let ethProvider: ethers.BrowserProvider | null = null;
 
     const checkNetwork = async (ethProvider: ethers.BrowserProvider | null) => {
-        if (!ethProvider) return;
+        if (!ethProvider) {
+            console.error("No EVM-compatible wallet detected.");
+            return;
+        }
         const network = await ethProvider.getNetwork();
         setIsOnAlpenTestnet(network.chainId === ALPEN_TESTNET_CHAIN_ID_BIGINT);
     };
 
-    const initializeProvider = async (): Promise<boolean> => {
+    const initializeProvider = (): ethers.BrowserProvider | null => {
         if (typeof window === "undefined" || !window.ethereum) {
             console.error("No EVM-compatible wallet detected.");
-            return false;
+            return null;
         }
 
         ethProvider = new ethers.BrowserProvider(window.ethereum, "any");
+        return ethProvider;
+    }
+
+    useEffect(() => {
+        if (typeof window === "undefined" || !window.ethereum || !ethProvider) {
+            return;
+        }
+
+        if (!ethProvider) {
+            ethProvider = initializeProvider();
+            if (!ethProvider) {
+                alert("No EVM-compatible wallet detected.");
+                return;
+            }
+        }
+
         checkNetwork(ethProvider);
 
         ethProvider.on("network", (newNetwork, oldNetwork) => {
@@ -70,14 +89,12 @@ export const WalletProvider = ({ children }: WalletProviderProps) => {
             );
             checkNetwork(ethProvider);
         });
-
-        return true;
-    };
+    }, []);
 
     const connectWallet = async () => {
         if (!ethProvider) {
-            const initialized = await initializeProvider();
-            if (!initialized || !ethProvider) {
+            ethProvider = initializeProvider();
+            if (!ethProvider) {
                 alert("No EVM-compatible wallet detected.");
                 return;
             }
@@ -93,6 +110,8 @@ export const WalletProvider = ({ children }: WalletProviderProps) => {
             setIsOnAlpenTestnet(
                 network.chainId === ALPEN_TESTNET_CHAIN_ID_BIGINT,
             );
+            console.log("Connected to wallet:", address);
+            console.log("Network ID:", network.chainId);
         } catch (error) {
             console.error("Error connecting to wallet:", error);
             alert("Failed to connect wallet.");
@@ -101,13 +120,11 @@ export const WalletProvider = ({ children }: WalletProviderProps) => {
 
     const connectManual = (address: string) => {
         setWalletAddress(address);
-        setIsOnAlpenTestnet(true);
     };
 
     const disconnectWallet = () => {
         setWalletAddress(null);
         setIsOnAlpenTestnet(false);
-        ethProvider = null;
     };
 
     const trySwitchToAlpen = async () => {
@@ -170,6 +187,7 @@ export const WalletProvider = ({ children }: WalletProviderProps) => {
                     try {
                         await trySwitchToAlpen();
                         console.log("Switched to Alpen Testnet after adding");
+                        setIsOnAlpenTestnet(true);
                     } catch (switchAgainError) {
                         console.error(
                             "Failed to switch after adding",

@@ -19,13 +19,12 @@ const Home = () => {
         switchToAlpenTestnet,
     } = useWallet();
     const [manualEntry, setManualEntry] = useState(false);
-    const [walletTriedToConnect, setWalletTriedToConnect] = useState(false);
     const [walletConnected, setWalletConnected] = useState(false);
     const [claimAmount, setClaimAmount] = useState<string | null>(null);
-    const [loading, setLoading] = useState(true);
+    const [fetchingClaimAmount, setFetchingClaimAmount] = useState(true);
     const [claimAmountError, setClaimAmountError] = useState(false);
 
-    // Fetch claimable amount on load
+    // Fetch claim amount on load
     useEffect(() => {
         if (!walletAddress) return; // only run when wallet is connected
 
@@ -36,7 +35,7 @@ const Home = () => {
         }
 
         async function fetchAmount() {
-            setLoading(true);
+            setFetchingClaimAmount(true);
             try {
                 const res: FaucetResult<string> = await getClaimAmount("l2");
                 if (res.ok) {
@@ -55,7 +54,7 @@ const Home = () => {
                 setClaimAmount(null);
                 setClaimAmountError(true);
             } finally {
-                setLoading(false);
+                setFetchingClaimAmount(false);
             }
         }
 
@@ -85,46 +84,52 @@ const Home = () => {
             )}
 
             <div className="container">
-                {!walletAddress ? (
-                    <>
-                        {!manualEntry &&
-                            walletTriedToConnect &&
-                            walletAddress &&
-                            !isOnAlpenTestnet && (
-                                <div className="networkErrorContainer">
-                                    <div className="networkErrorBox">
-                                        <span className="networkErrorTitle">
-                                            Wrong network
-                                        </span>
-                                        <p className="networkErrorText">
-                                            Your wallet is connected to the
-                                            wrong network. Please switch your
-                                            wallet to use the Alpen Testnet
-                                            network.
-                                            <br />
-                                            <a
-                                                href="https://docs.alpenlabs.io/welcome/wallet-setup"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="networkErrorLink"
-                                            >
-                                                Learn more
-                                            </a>
-                                        </p>
-                                        <button
-                                            className="switchButton"
-                                            onClick={switchToAlpenTestnet}
-                                        >
-                                            Switch
-                                        </button>
-                                    </div>
-                                </div>
-                            )}
+                {/* Wrong network. Need to switch to Alpen Testnet */}
+                {walletAddress && !manualEntry && !isOnAlpenTestnet && (
+                    <div className="networkErrorContainer">
+                        <div className="networkErrorBox">
+                            <span className="networkErrorTitle">
+                                Wrong network
+                            </span>
+                            <p className="networkErrorText">
+                                Your wallet is connected to the
+                                wrong network. Please switch your
+                                wallet to use the Alpen Testnet
+                                network.
+                                <br />
+                                <a
+                                    href="https://docs.alpenlabs.io/welcome/wallet-setup"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="networkErrorLink"
+                                >
+                                    Learn more
+                                </a>
+                            </p>
+                            <button
+                                className="switchButton"
+                                onClick={switchToAlpenTestnet}
+                            >
+                                Switch
+                            </button>
+                        </div>
+                    </div>
+                )}
+                {/* Have wallet address (manually entered or connected to Alpen Testnet) */}
+                {walletAddress && (isOnAlpenTestnet || manualEntry) ? (
+                    <ClaimTokens
+                        walletAddress={walletAddress!}
+                        manualEntry={manualEntry}
+                        claimAmount={claimAmount}
+                        claimAmountError={claimAmountError}
+                    />
+                ) : (
+                    // Landing page : connect wallet or enter address
+                    <div>
                         {!manualEntry ? (
                             <ConnectWallet
                                 onConnect={async () => {
                                     await connectWallet();
-                                    setWalletTriedToConnect(true);
                                 }}
                                 onManual={() => setManualEntry(true)}
                             />
@@ -133,15 +138,8 @@ const Home = () => {
                                 onManualConnect={handleManualConnect}
                             />
                         )}
-                    </>
-                ) : isOnAlpenTestnet ? (
-                    <ClaimTokens
-                        walletAddress={walletAddress!}
-                        claimAmount={claimAmount}
-                        manualEntry={manualEntry}
-                        claimAmountError={claimAmountError}
-                    />
-                ) : null}
+                    </div>
+                )}
             </div>
         </>
     );

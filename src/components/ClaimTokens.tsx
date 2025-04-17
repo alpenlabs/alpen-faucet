@@ -8,19 +8,19 @@ const ALPEN_BLOCKSCOUT_URL = import.meta.env.VITE_ALPEN_BLOCKSCOUT_URL;
 
 interface ClaimTokensProps {
     walletAddress: string;
-    claimAmount: string | null;
     manualEntry: boolean;
+    claimAmount: string | null;
     claimAmountError: boolean;
 }
 
 const ClaimTokens = ({
     walletAddress,
-    claimAmount,
     manualEntry,
+    claimAmount,
     claimAmountError,
 }: ClaimTokensProps) => {
     const [tries, setTries] = useState(0);
-    const [loading, setLoading] = useState(false);
+    const [fetchingPoW, setFetchingPoW] = useState(false);
     const [solvingPoW, setSolvingPoW] = useState(false);
     const [txId, setTxId] = useState<string | null>(null);
     const [error, setError] = useState("");
@@ -35,13 +35,13 @@ const ClaimTokens = ({
     }, [claimAmountError]);
 
     const handleConfirm = async () => {
-        setLoading(true);
+        setFetchingPoW(true);
         setError("");
 
         const powRes: FaucetResult<PowChallenge> = await getPowChallenge("l2");
         if (!powRes.ok) {
             setError(`Failed to fetch PoW challenge: ${powRes.error}`);
-            setLoading(false);
+            setFetchingPoW(false);
             return;
         }
 
@@ -55,7 +55,7 @@ const ClaimTokens = ({
         );
         if (!solRes.ok) {
             setError("Failed to solve PoW challenge.");
-            setLoading(false);
+            setFetchingPoW(false);
             setSolvingPoW(false);
             return;
         }
@@ -70,12 +70,12 @@ const ClaimTokens = ({
         }
 
         setCompleted(true);
-        setLoading(false);
+        setFetchingPoW(false);
     };
 
     const handleReset = () => {
         setTries(0);
-        setLoading(false);
+        setFetchingPoW(false);
         setSolvingPoW(false);
         setTxId(null);
         setError("");
@@ -142,7 +142,7 @@ const ClaimTokens = ({
             <button
                 className={styles.confirmButton}
                 onClick={completed ? handleReset : handleConfirm}
-                disabled={error !== "" || loading || solvingPoW}
+                disabled={error !== "" || fetchingPoW || solvingPoW}
             >
                 {completed ? "Start Over" : "Confirm"}
             </button>

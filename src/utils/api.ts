@@ -1,6 +1,6 @@
 import { FaucetResult, PowChallenge, ClaimTxid } from "../types/faucet";
 
-const ALPEN_FAUCET_API_URL = import.meta.env.VITE_ALPEN_FAUCET_API_URL;
+const ALPEN_FAUCET_API_URL = import.meta.env.VITE_ALPEN_FAUCET_API_URL_2;
 
 /**
  * Checks if faucet URL is set as an environment variable.
