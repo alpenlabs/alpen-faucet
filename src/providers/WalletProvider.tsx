@@ -178,6 +178,7 @@ export const WalletProvider = ({ children }: WalletProviderProps) => {
         }
         try {
             await trySwitchToAlpen();
+            setIsOnAlpenTestnet(true);
         } catch (switchError: any) {
             // Unrecognized chain ID.
             if (switchError.code === 4902) {
