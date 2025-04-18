@@ -62,15 +62,14 @@
 
 .enterButton {
     margin-top: 2rem;
-    color: black;
+    color: white;
     width: 40%;
-    background-color: white;
+    background-color: black;
     font-weight: 500;
 }
 
 .enterButton:disabled {
-    background-color: lightgray;
-    color: black;
+    background-color: gray;
     cursor: not-allowed;
     width: 40%;
 }
