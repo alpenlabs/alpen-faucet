@@ -20,8 +20,6 @@ const ClaimTokens = ({
     claimAmountError,
 }: ClaimTokensProps) => {
     const [tries, setTries] = useState(0);
-    const [fetchingPoW, setFetchingPoW] = useState(false);
-    const [solvingPoW, setSolvingPoW] = useState(false);
     const [txId, setTxId] = useState<string | null>(null);
     const [error, setError] = useState("");
     const [completed, setCompleted] = useState(false);
@@ -35,18 +33,15 @@ const ClaimTokens = ({
     }, [claimAmountError]);
 
     const handleConfirm = async () => {
-        setFetchingPoW(true);
         setError("");
 
         const powRes: FaucetResult<PowChallenge> = await getPowChallenge("l2");
         if (!powRes.ok) {
             setError(`Failed to fetch PoW challenge: ${powRes.error}`);
-            setFetchingPoW(false);
             return;
         }
 
         setTries(0);
-        setSolvingPoW(true);
 
         const solRes = await findSolution(
             powRes.data.nonce,
@@ -55,28 +50,21 @@ const ClaimTokens = ({
         );
         if (!solRes.ok) {
             setError("Failed to solve PoW challenge.");
-            setFetchingPoW(false);
-            setSolvingPoW(false);
             return;
         }
-
-        setSolvingPoW(false);
 
         const claimRes = await submitClaim(solRes.data, walletAddress);
         if (!claimRes.ok) {
             setError(`Failed to claim test BTC: ${claimRes.error}`);
+            setCompleted(true);
         } else {
             setTxId(claimRes.data);
         }
-
         setCompleted(true);
-        setFetchingPoW(false);
     };
 
     const handleReset = () => {
         setTries(0);
-        setFetchingPoW(false);
-        setSolvingPoW(false);
         setTxId(null);
         setError("");
         setCompleted(false);
@@ -142,7 +130,7 @@ const ClaimTokens = ({
             <button
                 className={styles.confirmButton}
                 onClick={completed ? handleReset : handleConfirm}
-                disabled={error !== "" || fetchingPoW || solvingPoW}
+                disabled={claimAmountError}
             >
                 {completed ? "Start Over" : "Confirm"}
             </button>
