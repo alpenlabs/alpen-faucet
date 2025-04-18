@@ -56,7 +56,6 @@ const ClaimTokens = ({
         const claimRes = await submitClaim(solRes.data, walletAddress);
         if (!claimRes.ok) {
             setError(`Failed to claim test BTC: ${claimRes.error}`);
-            setCompleted(true);
         } else {
             setTxId(claimRes.data);
         }
