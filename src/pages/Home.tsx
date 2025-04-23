@@ -122,6 +122,7 @@ const Home = () => {
                         manualEntry={manualEntry}
                         claimAmount={claimAmount}
                         claimAmountError={claimAmountError}
+                        onManualEntryReset={handleDisconnect}
                     />
                 ) : (
                     // Landing page : connect wallet or enter address
