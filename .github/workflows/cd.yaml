@@ -3,7 +3,7 @@ name: Kubernetes CI/CD
 on:
   push:
     branches:
-      - main
+      - ui-review
   workflow_dispatch:
     inputs:
       environment:
