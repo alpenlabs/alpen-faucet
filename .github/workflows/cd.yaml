@@ -18,7 +18,6 @@ on:
 env:
   CI: false
   COMMIT: ${{ github.sha }}
-  SERVICE: tn1/faucet-fe
 
 permissions:
   contents: read
@@ -51,12 +50,11 @@ jobs:
         id: build-and-push
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY_PREFIX: ${{ vars.ECR_REPOSITORY_PREFIX }}
+          ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY_PREFIX }}
         run: |
           IMAGE_TAG=${COMMIT::7}
           DOCKERFILE_PATH="./Dockerfile"
           CONTEXT_DIR="."
-          ECR_REPOSITORY="$ECR_REPOSITORY_PREFIX/${SERVICE}"
 
           echo "Building Docker image for $SERVICE with tag $IMAGE_TAG"
 
