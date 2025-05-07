@@ -11,6 +11,7 @@ interface ClaimTokensProps {
     manualEntry: boolean;
     claimAmount: string | null;
     claimAmountError: boolean;
+    onManualEntryReset: () => void;
 }
 
 const ClaimTokens = ({
@@ -18,6 +19,7 @@ const ClaimTokens = ({
     manualEntry,
     claimAmount,
     claimAmountError,
+    onManualEntryReset,
 }: ClaimTokensProps) => {
     const [tries, setTries] = useState(0);
     const [txId, setTxId] = useState<string | null>(null);
@@ -63,10 +65,14 @@ const ClaimTokens = ({
     };
 
     const handleReset = () => {
-        setTries(0);
-        setTxId(null);
-        setError("");
-        setCompleted(false);
+        if (manualEntry) {
+            onManualEntryReset();
+        } else {
+            setTries(0);
+            setTxId(null);
+            setError("");
+            setCompleted(false);
+        }
     };
 
     return (
