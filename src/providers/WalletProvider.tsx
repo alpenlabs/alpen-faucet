@@ -33,15 +33,6 @@ export const WalletProvider = ({ children }: WalletProviderProps) => {
     const [isOnAlpenTestnet, setIsOnAlpenTestnet] = useState(false);
     const ethProviderRef = useRef<ethers.BrowserProvider | null>(null);
 
-    const checkNetwork = async (ethProvider: ethers.BrowserProvider | null) => {
-        if (!ethProvider) {
-            console.error("No EVM-compatible wallet detected.");
-            return;
-        }
-        const network = await ethProvider.getNetwork();
-        setIsOnAlpenTestnet(network.chainId === ALPEN_TESTNET_CHAIN_ID_BIGINT);
-    };
-
     const initializeProvider = (): ethers.BrowserProvider | null => {
         if (typeof window === "undefined" || !window.ethereum) {
             console.error("No EVM-compatible wallet detected.");
@@ -51,6 +42,15 @@ export const WalletProvider = ({ children }: WalletProviderProps) => {
         const provider = new ethers.BrowserProvider(window.ethereum, "any");
         ethProviderRef.current = provider;
         return provider;
+    };
+
+    const checkNetwork = async (ethProvider: ethers.BrowserProvider | null) => {
+        if (!ethProvider) {
+            console.error("No EVM-compatible wallet detected.");
+            return;
+        }
+        const network = await ethProvider.getNetwork();
+        setIsOnAlpenTestnet(network.chainId === ALPEN_TESTNET_CHAIN_ID_BIGINT);
     };
 
     // Get current accounts
@@ -134,10 +134,9 @@ export const WalletProvider = ({ children }: WalletProviderProps) => {
             const network = await provider.getNetwork();
 
             console.log("Network ID:", network.chainId);
-            if (network.chainId !== ALPEN_TESTNET_CHAIN_ID_BIGINT) {
-                setIsOnAlpenTestnet(false);
-            } else {
-                setWalletAddress(address);
+            setWalletAddress(address);
+            if (network.chainId === ALPEN_TESTNET_CHAIN_ID_BIGINT) {
+                setIsOnAlpenTestnet(true);
                 console.log("Connected to wallet:", address);
             }
         } catch (error) {
