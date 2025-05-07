@@ -65,42 +65,41 @@ export const WalletProvider = ({ children }: WalletProviderProps) => {
         }
     };
 
+    const handleAccountsChanged = (accounts: string[]) => {
+        const newAddress = accounts.length > 0 ? accounts[0] : null;
+        console.log("Setting wallet address to:", newAddress);
+        setWalletAddress(newAddress);
+    };
+
+    const handleChainChanged = (_chainId: string) => {
+        console.log("Chain changed, reloading provider");
+        // Reinitialize provider on chain change as recommended by MetaMask
+        const newProvider = initializeProvider();
+        checkNetwork(newProvider);
+        if (newProvider) {
+            updateAccounts(newProvider);
+        }
+    };
+
+    const handleNetworkChange = () => {
+        checkNetwork(ethProviderRef.current);
+    };
+
+
     useEffect(() => {
-        const provider = initializeProvider();
-        if (!provider) {
+        if (typeof window === "undefined" || !window.ethereum) {
+            console.error("window.ethereum not available");
             return;
         }
+
+        const provider = new ethers.BrowserProvider(window.ethereum, "any");
+        ethProviderRef.current = provider;
 
         // Initial network check
         checkNetwork(provider);
 
-        const handleAccountsChanged = (accounts: string[]) => {
-            console.log("New accounts:", accounts);
-
-            const newAddress = accounts.length > 0 ? accounts[0] : null;
-            console.log("Setting wallet address to:", newAddress);
-            setWalletAddress(newAddress);
-        };
-
-        const handleChainChanged = (_chainId: string) => {
-            console.log("Network changed, reloading provider");
-            // Reinitialize provider on chain change as recommended by MetaMask
-            const newProvider = initializeProvider();
-            checkNetwork(newProvider);
-            if (newProvider) {
-                updateAccounts(newProvider);
-            }
-        };
-
-        const handleNetworkChange = (newNetwork: any, oldNetwork: any) => {
-            if (oldNetwork) {
-                checkNetwork(ethProviderRef.current);
-            }
-        };
-
         // Add event listeners - safely checking for existence first
         if (window.ethereum && typeof window.ethereum.on === 'function') {
-            console.log("registering listeners");
             window.ethereum.on("accountsChanged", handleAccountsChanged);
             window.ethereum.on("chainChanged", handleChainChanged);
         }
@@ -121,11 +120,7 @@ export const WalletProvider = ({ children }: WalletProviderProps) => {
     }, []);
 
     const connectWallet = async () => {
-        // Ensure provider exists before using it
-        let provider = ethProviderRef.current;
-        if (!provider) {
-            provider = initializeProvider();
-        }
+        let provider = ethProviderRef.current || initializeProvider();
 
         if (!provider) {
             alert("No EVM-compatible wallet detected.");
@@ -138,12 +133,13 @@ export const WalletProvider = ({ children }: WalletProviderProps) => {
             const address = await signer.getAddress();
             const network = await provider.getNetwork();
 
-            setWalletAddress(address);
-            setIsOnAlpenTestnet(
-                network.chainId === ALPEN_TESTNET_CHAIN_ID_BIGINT
-            );
-            console.log("Connected to wallet:", address);
             console.log("Network ID:", network.chainId);
+            if (network.chainId !== ALPEN_TESTNET_CHAIN_ID_BIGINT) {
+                setIsOnAlpenTestnet(false);
+            } else {
+                setWalletAddress(address);
+                console.log("Connected to wallet:", address);
+            }
         } catch (error) {
             console.error("Error connecting to wallet:", error);
             alert("Failed to connect wallet.");
