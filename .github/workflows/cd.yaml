@@ -56,10 +56,14 @@ jobs:
           DOCKERFILE_PATH="./Dockerfile"
           CONTEXT_DIR="."
 
-          echo "Building Docker image for $SERVICE with tag $IMAGE_TAG"
+          echo "Building Docker image for $SERVICE with tag $IMAGE_TAG and latest"
 
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f $DOCKERFILE_PATH $CONTEXT_DIR
+          # Build both tags
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest -f $DOCKERFILE_PATH $CONTEXT_DIR
+
+          # Push both tags
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
   update-helm-values:
     name: Update Helm Values
     needs: [build-and-push]
