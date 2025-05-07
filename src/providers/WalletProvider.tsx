@@ -152,7 +152,6 @@ export const WalletProvider = ({ children }: WalletProviderProps) => {
 
     const disconnectWallet = () => {
         setWalletAddress(null);
-        setIsOnAlpenTestnet(false);
     };
 
     const trySwitchToAlpen = async () => {
