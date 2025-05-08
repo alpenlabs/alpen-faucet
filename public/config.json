@@ -1,5 +1,5 @@
 {
-  "faucetApiUrl": "https://faucet-api.testnet-staging.stratabtc.org",
-  "alpenExplorerUrl": "https://explorer.testnet-staging.stratabtc.org",
-  "environment": "staging"
+    "faucetApiUrl": "https://faucet-api.testnet-staging.stratabtc.org",
+    "alpenExplorerUrl": "https://explorer.testnet-staging.stratabtc.org",
+    "environment": "staging"
 }

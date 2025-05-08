@@ -93,10 +93,9 @@ const Home = () => {
                                 Wrong network
                             </span>
                             <p className="networkErrorText">
-                                Your wallet is connected to the
-                                wrong network. Please switch your
-                                wallet to use the Alpen Testnet
-                                network.
+                                Your wallet is connected to the wrong network.
+                                Please switch your wallet to use the Alpen
+                                Testnet network.
                                 <br />
                                 <a
                                     href="https://docs.alpenlabs.io/welcome/wallet-setup"

@@ -1,4 +1,4 @@
-import { useConfig } from "../providers/ConfigProvider";
+import { useConfig } from "../hooks/useConfig";
 import { FaucetResult, PowChallenge, ClaimTxid } from "../types/faucet";
 
 /**
@@ -30,7 +30,7 @@ export function useFaucetApi() {
      */
     async function safeFetchJson<T>(
         endpoint: string,
-        context: string
+        context: string,
     ): Promise<FaucetResult<T>> {
         if (!faucetApiUrl) {
             return {
@@ -60,27 +60,32 @@ export function useFaucetApi() {
     function getClaimAmount(chain: string): Promise<FaucetResult<string>> {
         return safeFetchJson<string>(
             `sats_to_claim/${chain}`,
-            "Failed to get claim amount"
+            "Failed to get claim amount",
         );
     }
 
     /**
      * Requests a PoW challenge for the specified chain.
      */
-    function getPowChallenge(chain: string): Promise<FaucetResult<PowChallenge>> {
+    function getPowChallenge(
+        chain: string,
+    ): Promise<FaucetResult<PowChallenge>> {
         return safeFetchJson<PowChallenge>(
             `pow_challenge/${chain}`,
-            "Failed to fetch Proof of Work"
+            "Failed to fetch Proof of Work",
         );
     }
 
     /**
      * Submits a claim to the faucet with the provided solution and address.
      */
-    function submitClaim(solution: string, address: string): Promise<FaucetResult<ClaimTxid>> {
+    function submitClaim(
+        solution: string,
+        address: string,
+    ): Promise<FaucetResult<ClaimTxid>> {
         return safeFetchJson<ClaimTxid>(
             `claim_l2/${solution}/${address}`,
-            "Failed to claim test BTC"
+            "Failed to claim test BTC",
         );
     }
 

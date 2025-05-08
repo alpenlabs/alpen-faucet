@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useFaucetApi } from "../utils/api";
 import { findSolution } from "../utils/solver";
 import { FaucetResult, PowChallenge } from "../types/faucet";
-import { useConfig } from "../providers/ConfigProvider";
+import { useConfig } from "../hooks/useConfig";
 import styles from "../styles/ClaimTokens.module.css";
 
 interface ClaimTokensProps {
@@ -50,7 +50,7 @@ const ClaimTokens = ({
         const solRes = await findSolution(
             powRes.data.nonce,
             powRes.data.difficulty,
-            setTries
+            setTries,
         );
         if (!solRes.ok) {
             setError("Failed to solve PoW challenge.");

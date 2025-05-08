@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 
 export interface AppConfig {
     faucetApiUrl: string;
@@ -8,24 +8,20 @@ export interface AppConfig {
 
 const ConfigContext = createContext<AppConfig | null>(null);
 
-export const useConfig = (): AppConfig => {
-    const ctx = useContext(ConfigContext);
-    if (!ctx) throw new Error("useConfig must be used inside <ConfigProvider>");
-    return ctx;
-};
-
-export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({
+    children,
+}) => {
     const [config, setConfig] = useState<AppConfig | null>(null);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         fetch("/config.json")
-            .then(res => {
+            .then((res) => {
                 if (!res.ok) throw new Error("Failed to load config");
                 return res.json();
             })
             .then(setConfig)
-            .catch(err => {
+            .catch((err) => {
                 console.error("Config load error:", err);
                 setError("Failed to load configuration");
             });
@@ -34,5 +30,11 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     if (error) return <div>Error: {error}</div>;
     if (!config) return <div>Loading config...</div>;
 
-    return <ConfigContext.Provider value={config}>{children}</ConfigContext.Provider>;
+    return (
+        <ConfigContext.Provider value={config}>
+            {children}
+        </ConfigContext.Provider>
+    );
 };
+
+export default ConfigContext;
