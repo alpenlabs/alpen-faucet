@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { getPowChallenge, submitClaim } from "../utils/api";
+import { useFaucetApi } from "../utils/api";
 import { findSolution } from "../utils/solver";
 import { FaucetResult, PowChallenge } from "../types/faucet";
+import { useConfig } from "../providers/ConfigProvider";
 import styles from "../styles/ClaimTokens.module.css";
-
-const ALPEN_BLOCKSCOUT_URL = import.meta.env.VITE_ALPEN_BLOCKSCOUT_URL;
 
 interface ClaimTokensProps {
     walletAddress: string;
@@ -25,6 +24,9 @@ const ClaimTokens = ({
     const [txId, setTxId] = useState<string | null>(null);
     const [error, setError] = useState("");
     const [completed, setCompleted] = useState(false);
+
+    const { getPowChallenge, submitClaim } = useFaucetApi();
+    const { alpenExplorerUrl } = useConfig();
 
     useEffect(() => {
         if (claimAmountError) {
@@ -48,7 +50,7 @@ const ClaimTokens = ({
         const solRes = await findSolution(
             powRes.data.nonce,
             powRes.data.difficulty,
-            setTries,
+            setTries
         );
         if (!solRes.ok) {
             setError("Failed to solve PoW challenge.");
@@ -61,6 +63,7 @@ const ClaimTokens = ({
         } else {
             setTxId(claimRes.data);
         }
+
         setCompleted(true);
     };
 
@@ -89,12 +92,13 @@ const ClaimTokens = ({
                         {claimAmount ? `${claimAmount} BTC` : "-"}
                     </span>
                 </div>
+
                 {manualEntry && (
                     <div className={styles.gridRow}>
                         <span className={styles.gridLabel}>Address:</span>
                         <span className={styles.gridValue}>
                             <a
-                                href={`${ALPEN_BLOCKSCOUT_URL}/address/${walletAddress}`}
+                                href={`${alpenExplorerUrl}/address/${walletAddress}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className={styles.addressLink}
@@ -105,18 +109,20 @@ const ClaimTokens = ({
                         </span>
                     </div>
                 )}
+
                 <div className={styles.gridRow}>
                     <span className={styles.gridLabel}>Proof of Work:</span>
                     <span className={styles.gridValue}>
                         {tries > 0 ? tries : "-"}
                     </span>
                 </div>
+
                 <div className={styles.gridRow}>
                     <span className={styles.gridLabel}>TXID:</span>
                     <span className={styles.gridValue}>
                         {txId ? (
                             <a
-                                href={`${ALPEN_BLOCKSCOUT_URL}/tx/${txId}`}
+                                href={`${alpenExplorerUrl}/tx/${txId}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className={styles.txidLink}

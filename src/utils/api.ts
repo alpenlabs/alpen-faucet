@@ -1,20 +1,10 @@
+import { useConfig } from "../providers/ConfigProvider";
 import { FaucetResult, PowChallenge, ClaimTxid } from "../types/faucet";
-
-const ALPEN_FAUCET_API_URL = import.meta.env.VITE_ALPEN_FAUCET_API_URL;
-
-/**
- * Checks if faucet URL is set as an environment variable.
- */
-function isFaucetUrlSet(): boolean {
-    return typeof ALPEN_FAUCET_API_URL !== "undefined";
-}
 
 /**
  * Handles a fetch response, detecting JSON or plain text, and returns a typed result.
  */
-export async function handleResponse<T>(
-    res: Response,
-): Promise<FaucetResult<T>> {
+async function handleResponse<T>(res: Response): Promise<FaucetResult<T>> {
     const raw = await res.text();
 
     if (!res.ok) {
@@ -30,65 +20,73 @@ export async function handleResponse<T>(
 }
 
 /**
- * Wraps a fetch call with standard error handling and logging.
+ * Custom hook that provides faucet-related API methods using runtime config.
  */
-async function safeFetchJson<T>(
-    url: string,
-    context: string,
-): Promise<FaucetResult<T>> {
-    if (!isFaucetUrlSet()) {
-        return Promise.resolve({
-            ok: false,
-            error: "faucet api url: " + ALPEN_FAUCET_API_URL,
-        });
-    }
+export function useFaucetApi() {
+    const { faucetApiUrl } = useConfig();
 
-    try {
-        const res = await fetch(url);
-        const result = await handleResponse<T>(res);
-
-        if (!result.ok) {
-            console.error(`${context}:`, result.error);
+    /**
+     * Wraps a fetch call with standard error handling and logging.
+     */
+    async function safeFetchJson<T>(
+        endpoint: string,
+        context: string
+    ): Promise<FaucetResult<T>> {
+        if (!faucetApiUrl) {
+            return {
+                ok: false,
+                error: "faucetApiUrl is not set",
+            };
         }
 
-        return result;
-    } catch (e: any) {
-        console.error(`${context}:`, e);
-        return { ok: false, error: e.message || "Unknown error" };
+        try {
+            const res = await fetch(`${faucetApiUrl}/${endpoint}`);
+            const result = await handleResponse<T>(res);
+
+            if (!result.ok) {
+                console.error(`${context}:`, result.error);
+            }
+
+            return result;
+        } catch (e: any) {
+            console.error(`${context}:`, e);
+            return { ok: false, error: e.message || "Unknown error" };
+        }
     }
-}
 
-/**
- * Fetches the amount of BTC claimable based on network level.
- */
-export function getClaimAmount(chain: string): Promise<FaucetResult<string>> {
-    return safeFetchJson<string>(
-        `${ALPEN_FAUCET_API_URL}/sats_to_claim/${chain}`,
-        "Failed to get claim amount",
-    );
-}
+    /**
+     * Fetches the amount of BTC claimable based on network level.
+     */
+    function getClaimAmount(chain: string): Promise<FaucetResult<string>> {
+        return safeFetchJson<string>(
+            `sats_to_claim/${chain}`,
+            "Failed to get claim amount"
+        );
+    }
 
-/**
- * Requests a PoW challenge for the specified chain.
- */
-export function getPowChallenge(
-    chain: string,
-): Promise<FaucetResult<PowChallenge>> {
-    return safeFetchJson<PowChallenge>(
-        `${ALPEN_FAUCET_API_URL}/pow_challenge/${chain}`,
-        "Failed to fetch Proof of Work",
-    );
-}
+    /**
+     * Requests a PoW challenge for the specified chain.
+     */
+    function getPowChallenge(chain: string): Promise<FaucetResult<PowChallenge>> {
+        return safeFetchJson<PowChallenge>(
+            `pow_challenge/${chain}`,
+            "Failed to fetch Proof of Work"
+        );
+    }
 
-/**
- * Submits a claim to the faucet with the provided solution and address.
- */
-export function submitClaim(
-    solution: string,
-    address: string,
-): Promise<FaucetResult<ClaimTxid>> {
-    return safeFetchJson<ClaimTxid>(
-        `${ALPEN_FAUCET_API_URL}/claim_l2/${solution}/${address}`,
-        "Failed to claim test BTC",
-    );
+    /**
+     * Submits a claim to the faucet with the provided solution and address.
+     */
+    function submitClaim(solution: string, address: string): Promise<FaucetResult<ClaimTxid>> {
+        return safeFetchJson<ClaimTxid>(
+            `claim_l2/${solution}/${address}`,
+            "Failed to claim test BTC"
+        );
+    }
+
+    return {
+        getClaimAmount,
+        getPowChallenge,
+        submitClaim,
+    };
 }
