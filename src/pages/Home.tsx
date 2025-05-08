@@ -5,7 +5,7 @@ import ConnectWallet from "../components/ConnectWallet";
 import ManualWalletEntry from "../components/ManualWalletEntry";
 import ClaimTokens from "../components/ClaimTokens";
 import { useWallet } from "../providers/WalletProvider";
-import { getClaimAmount } from "../utils/api";
+import { useFaucetApi } from "../utils/api";
 import { FaucetResult, WalletAddress } from "../types/faucet";
 import "../styles/index.css";
 
@@ -23,6 +23,7 @@ const Home = () => {
     const [claimAmount, setClaimAmount] = useState<string | null>(null);
     const [fetchingClaimAmount, setFetchingClaimAmount] = useState(true);
     const [claimAmountError, setClaimAmountError] = useState(false);
+    const { getClaimAmount } = useFaucetApi();
 
     // Fetch claim amount on load
     useEffect(() => {
@@ -92,10 +93,9 @@ const Home = () => {
                                 Wrong network
                             </span>
                             <p className="networkErrorText">
-                                Your wallet is connected to the
-                                wrong network. Please switch your
-                                wallet to use the Alpen Testnet
-                                network.
+                                Your wallet is connected to the wrong network.
+                                Please switch your wallet to use the Alpen
+                                Testnet network.
                                 <br />
                                 <a
                                     href="https://docs.alpenlabs.io/welcome/wallet-setup"

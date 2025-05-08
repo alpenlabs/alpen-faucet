@@ -85,7 +85,6 @@ export const WalletProvider = ({ children }: WalletProviderProps) => {
         checkNetwork(ethProviderRef.current);
     };
 
-
     useEffect(() => {
         if (typeof window === "undefined" || !window.ethereum) {
             console.error("window.ethereum not available");
@@ -99,22 +98,34 @@ export const WalletProvider = ({ children }: WalletProviderProps) => {
         checkNetwork(provider);
 
         // Add event listeners - safely checking for existence first
-        if (window.ethereum && typeof window.ethereum.on === 'function') {
+        if (window.ethereum && typeof window.ethereum.on === "function") {
             window.ethereum.on("accountsChanged", handleAccountsChanged);
             window.ethereum.on("chainChanged", handleChainChanged);
         }
 
-        provider.on("network", handleNetworkChange)
+        provider.on("network", handleNetworkChange);
 
         // Clean up event listeners on component unmount
         return () => {
-            if (window.ethereum && typeof window.ethereum.removeListener === 'function') {
-                window.ethereum.removeListener("accountsChanged", handleAccountsChanged);
-                window.ethereum.removeListener("chainChanged", handleChainChanged);
+            if (
+                window.ethereum &&
+                typeof window.ethereum.removeListener === "function"
+            ) {
+                window.ethereum.removeListener(
+                    "accountsChanged",
+                    handleAccountsChanged,
+                );
+                window.ethereum.removeListener(
+                    "chainChanged",
+                    handleChainChanged,
+                );
             }
 
             if (ethProviderRef.current) {
-                ethProviderRef.current.removeListener("network", handleNetworkChange);
+                ethProviderRef.current.removeListener(
+                    "network",
+                    handleNetworkChange,
+                );
             }
         };
     }, []);
