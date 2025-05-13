@@ -74,8 +74,8 @@ const ClaimTokens = ({
             setTries(0);
             setTxId(null);
             setError("");
-            setCompleted(false);
         }
+        setCompleted(false);
     };
 
     return (
