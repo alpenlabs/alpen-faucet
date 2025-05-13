@@ -79,7 +79,7 @@ const ClaimTokens = ({
     };
 
     return (
-        <div className={styles.box}>
+        <>
             <div className={styles.title}>
                 <span>Get test BTC</span>
                 <span>for Alpen Testnet</span>
@@ -145,7 +145,7 @@ const ClaimTokens = ({
             >
                 {completed ? "Start Over" : "Confirm"}
             </button>
-        </div>
+        </>
     );
 };
 

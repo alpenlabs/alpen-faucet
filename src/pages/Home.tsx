@@ -23,44 +23,58 @@ const Home = () => {
     const [claimAmount, setClaimAmount] = useState<string | null>(null);
     const [fetchingClaimAmount, setFetchingClaimAmount] = useState(true);
     const [claimAmountError, setClaimAmountError] = useState(false);
-    const { getClaimAmount } = useFaucetApi();
+    const [faucetBalance, setFaucetBalance] = useState<number | null>(null);
+    const [faucetBalanceLow, setFaucetBalanceLow] = useState(false);
+    const { getClaimAmount, getFaucetBalance } = useFaucetApi();
 
     // Fetch claim amount on load
     useEffect(() => {
-        if (!walletAddress) return; // only run when wallet is connected
-
-        if (walletAddress && isOnAlpenTestnet && !manualEntry) {
-            setWalletConnected(true);
-        } else {
-            setWalletConnected(false);
-        }
-
-        async function fetchAmount() {
-            setFetchingClaimAmount(true);
+        async function fetchBalanceAndClaim() {
             try {
-                const res: FaucetResult<string> = await getClaimAmount("l2");
-                if (res.ok) {
-                    const sats = parseInt(res.data, 10);
-                    const btc = (sats / 100_000_000).toFixed(2);
-                    console.log(`Claim amount: ${btc} BTC`);
-                    setClaimAmount(btc);
+                const claimRes: FaucetResult<number> = await getClaimAmount("l2");
+                if (claimRes.ok) {
+                    const sats = claimRes.data;
+                    const btc = sats / 100_000_000;
+                    setClaimAmount(btc.toFixed(2));
                     setClaimAmountError(false);
+
+                    // Fetch balance only after claim amount is known
+                    const balanceRes: FaucetResult<number> = await getFaucetBalance("l2");
+                    if (balanceRes.ok) {
+                        const balance = balanceRes.data;
+                        setFaucetBalance(balance);
+                        setFaucetBalanceLow(balance < btc);
+                    } else {
+                        console.error("Failed to fetch faucet balance:", balanceRes.error);
+                        setFaucetBalance(null);
+                        setFaucetBalanceLow(true);
+                    }
                 } else {
-                    console.error("Failed to fetch claim amount:", res.error);
+                    console.error("Failed to fetch claim amount:", claimRes.error);
                     setClaimAmount(null);
                     setClaimAmountError(true);
+                    setFaucetBalanceLow(true);
                 }
             } catch (err) {
-                console.error("Failed to fetch claim amount:", err);
-                setClaimAmount(null);
+                console.error("Failed to fetch data:", err);
                 setClaimAmountError(true);
+                setFaucetBalanceLow(true);
             } finally {
                 setFetchingClaimAmount(false);
             }
         }
 
-        fetchAmount();
-    }, [manualEntry, walletAddress, isOnAlpenTestnet]);
+        fetchBalanceAndClaim();
+    }, []);
+
+    // Set connection status when wallet changes
+    useEffect(() => {
+        if (walletAddress && isOnAlpenTestnet && !manualEntry) {
+            setWalletConnected(true);
+        } else {
+            setWalletConnected(false);
+        }
+    }, [walletAddress, manualEntry, isOnAlpenTestnet]);
 
     const handleManualConnect = (address: WalletAddress) => {
         connectManual(address);
@@ -85,61 +99,83 @@ const Home = () => {
             )}
 
             <div className="container">
-                {/* Wrong network. Need to switch to Alpen Testnet */}
-                {walletAddress && !manualEntry && !isOnAlpenTestnet && (
-                    <div className="networkErrorContainer">
-                        <div className="networkErrorBox">
-                            <span className="networkErrorTitle">
-                                Wrong network
-                            </span>
-                            <p className="networkErrorText">
-                                Your wallet is connected to the wrong network.
-                                Please switch your wallet to use the Alpen
-                                Testnet network.
-                                <br />
-                                <a
-                                    href="https://docs.alpenlabs.io/welcome/wallet-setup"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="networkErrorLink"
-                                >
-                                    Learn more
-                                </a>
-                            </p>
-                            <button
-                                className="switchButton"
-                                onClick={switchToAlpenTestnet}
-                            >
-                                Switch
-                            </button>
+                {/* Faucet balance is low */}
+                {faucetBalanceLow && !fetchingClaimAmount ? (
+                    <div className="box">
+                        <div className="faucetErrorText">
+                            <span>The faucet is running</span>
+                            <span>low on Test BTC.</span>
+                        </div>
+                        <div className="faucetErrorText">
+                            <span>Please come back and</span>
+                            <span>try again later.</span>
                         </div>
                     </div>
-                )}
-                {/* Have wallet address (manually entered or connected to Alpen Testnet) */}
-                {walletAddress && (isOnAlpenTestnet || manualEntry) ? (
-                    <ClaimTokens
-                        walletAddress={walletAddress!}
-                        manualEntry={manualEntry}
-                        claimAmount={claimAmount}
-                        claimAmountError={claimAmountError}
-                        onManualEntryReset={handleDisconnect}
-                    />
                 ) : (
-                    // Landing page : connect wallet or enter address
-                    <div>
-                        {!manualEntry ? (
-                            <ConnectWallet
-                                onConnect={async () => {
-                                    await connectWallet();
-                                }}
-                                onManual={() => setManualEntry(true)}
-                            />
-                        ) : (
-                            <ManualWalletEntry
-                                onManualConnect={handleManualConnect}
-                            />
+                    <>
+                        {/* Wrong network. Need to switch to Alpen Testnet */}
+                        {walletAddress && !manualEntry && !isOnAlpenTestnet && (
+                            <div className="networkErrorContainer">
+                                <div className="networkErrorBox">
+                                    <span className="networkErrorTitle">
+                                        Wrong network
+                                    </span>
+                                    <p className="networkErrorText">
+                                        Your wallet is connected to the wrong network.
+                                        Please switch your wallet to use the Alpen
+                                        Testnet network.
+                                        <br />
+                                        <a
+                                            href="https://docs.alpenlabs.io/welcome/wallet-setup"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="networkErrorLink"
+                                        >
+                                            Learn more
+                                        </a>
+                                    </p>
+                                    <button
+                                        className="switchButton"
+                                        onClick={switchToAlpenTestnet}
+                                    >
+                                        Switch
+                                    </button>
+                                </div>
+                            </div>
                         )}
-                    </div>
+                        {/* Have wallet address (manually entered or connected to Alpen Testnet) */}
+                        {walletAddress && (isOnAlpenTestnet || manualEntry) ? (
+                            <div className="box">
+                                <ClaimTokens
+                                    walletAddress={walletAddress!}
+                                    manualEntry={manualEntry}
+                                    claimAmount={claimAmount}
+                                    claimAmountError={claimAmountError}
+                                    onManualEntryReset={handleDisconnect}
+                                />
+                            </div>
+                        ) : (
+                            // Landing page : connect wallet or enter address
+                            <div>
+                                {!manualEntry ? (
+                                    <div className="box">
+                                        <ConnectWallet
+                                            onConnect={async () => {
+                                                await connectWallet();
+                                            }}
+                                            onManual={() => setManualEntry(true)}
+                                        />
+                                    </div>
+                                ) : (
+                                    <div className="box">
+                                        <ManualWalletEntry
+                                            onManualConnect={handleManualConnect}
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </>
                 )}
             </div>
         </>

@@ -57,10 +57,20 @@ export function useFaucetApi() {
     /**
      * Fetches the amount of BTC claimable based on network level.
      */
-    function getClaimAmount(chain: string): Promise<FaucetResult<string>> {
-        return safeFetchJson<string>(
+    function getClaimAmount(chain: string): Promise<FaucetResult<number>> {
+        return safeFetchJson<number>(
             `sats_to_claim/${chain}`,
             "Failed to get claim amount",
+        );
+    }
+
+    /**
+     * Fetches the faucet balance.
+     */
+    function getFaucetBalance(chain: string): Promise<FaucetResult<number>> {
+        return safeFetchJson<number>(
+            `balance/${chain}`,
+            "Failed to get balance",
         );
     }
 
@@ -91,6 +101,7 @@ export function useFaucetApi() {
 
     return {
         getClaimAmount,
+        getFaucetBalance,
         getPowChallenge,
         submitClaim,
     };
