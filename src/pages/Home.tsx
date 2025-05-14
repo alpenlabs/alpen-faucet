@@ -23,7 +23,6 @@ const Home = () => {
     const [claimAmount, setClaimAmount] = useState<string | null>(null);
     const [fetchingClaimAmount, setFetchingClaimAmount] = useState(true);
     const [claimAmountError, setClaimAmountError] = useState(false);
-    const [faucetBalance, setFaucetBalance] = useState<number | null>(null);
     const [faucetBalanceLow, setFaucetBalanceLow] = useState(false);
     const { getClaimAmount, getFaucetBalance } = useFaucetApi();
 
@@ -33,20 +32,18 @@ const Home = () => {
             try {
                 const claimRes: FaucetResult<number> = await getClaimAmount("l2");
                 if (claimRes.ok) {
-                    const sats = claimRes.data;
-                    const btc = sats / 100_000_000;
+                    const satsToClaim = claimRes.data;
+                    const btc = satsToClaim / 100_000_000;
                     setClaimAmount(btc.toFixed(2));
                     setClaimAmountError(false);
 
                     // Fetch balance only after claim amount is known
                     const balanceRes: FaucetResult<number> = await getFaucetBalance("l2");
                     if (balanceRes.ok) {
-                        const balance = balanceRes.data;
-                        setFaucetBalance(balance);
-                        setFaucetBalanceLow(balance < btc);
+                        const balanceSats = balanceRes.data;
+                        setFaucetBalanceLow(balanceSats < satsToClaim);
                     } else {
                         console.error("Failed to fetch faucet balance:", balanceRes.error);
-                        setFaucetBalance(null);
                         setFaucetBalanceLow(true);
                     }
                 } else {
@@ -100,7 +97,7 @@ const Home = () => {
 
             <div className="container">
                 {/* Faucet balance is low */}
-                {faucetBalanceLow && !fetchingClaimAmount ? (
+                {faucetBalanceLow || fetchingClaimAmount ? (
                     <div className="box">
                         <div className="faucetErrorText">
                             <span>The faucet is running</span>
