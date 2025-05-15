@@ -7,7 +7,7 @@ interface ConnectWalletProps {
 
 const ConnectWallet = ({ onConnect, onManual }: ConnectWalletProps) => {
     return (
-        <div className={styles.box}>
+        <>
             <div className={styles.title}>
                 <span>Get test BTC</span>
                 <span>for Alpen Testnet</span>
@@ -18,7 +18,7 @@ const ConnectWallet = ({ onConnect, onManual }: ConnectWalletProps) => {
             <p className={styles.manualEntryLink} onClick={onManual}>
                 or enter address
             </p>
-        </div>
+        </>
     );
 };
 

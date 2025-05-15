@@ -24,6 +24,7 @@ const ClaimTokens = ({
     const [txId, setTxId] = useState<string | null>(null);
     const [error, setError] = useState("");
     const [completed, setCompleted] = useState(false);
+    const [claiming, setClaiming] = useState(false);
 
     const { getPowChallenge, submitClaim } = useFaucetApi();
     const { alpenExplorerUrl } = useConfig();
@@ -38,10 +39,12 @@ const ClaimTokens = ({
 
     const handleConfirm = async () => {
         setError("");
+        setClaiming(true);
 
         const powRes: FaucetResult<PowChallenge> = await getPowChallenge("l2");
         if (!powRes.ok) {
-            setError(`Failed to fetch PoW challenge: ${powRes.error}`);
+            setError(`${powRes.error}`);
+            setClaiming(false);
             return;
         }
 
@@ -54,16 +57,18 @@ const ClaimTokens = ({
         );
         if (!solRes.ok) {
             setError("Failed to solve PoW challenge.");
+            setClaiming(false);
             return;
         }
 
         const claimRes = await submitClaim(solRes.data, walletAddress);
         if (!claimRes.ok) {
-            setError(`Failed to claim test BTC: ${claimRes.error}`);
+            setError(`${claimRes.error}`);
         } else {
             setTxId(claimRes.data);
         }
 
+        setClaiming(false);
         setCompleted(true);
     };
 
@@ -74,12 +79,13 @@ const ClaimTokens = ({
             setTries(0);
             setTxId(null);
             setError("");
-            setCompleted(false);
         }
+        setClaiming(false);
+        setCompleted(false);
     };
 
     return (
-        <div className={styles.box}>
+        <>
             <div className={styles.title}>
                 <span>Get test BTC</span>
                 <span>for Alpen Testnet</span>
@@ -141,11 +147,11 @@ const ClaimTokens = ({
             <button
                 className={styles.confirmButton}
                 onClick={completed ? handleReset : handleConfirm}
-                disabled={claimAmountError}
+                disabled={claimAmountError || claiming}
             >
                 {completed ? "Start Over" : "Confirm"}
             </button>
-        </div>
+        </>
     );
 };
 
