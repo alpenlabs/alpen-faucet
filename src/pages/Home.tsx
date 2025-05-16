@@ -97,7 +97,11 @@ const Home = () => {
 
             <div className="container">
                 {/* Faucet balance is low */}
-                {faucetBalanceLow || fetchingClaimAmount ? (
+                {fetchingClaimAmount ? (
+                    <div className="box">
+                        <div className="loadingText">Checking faucet balance ...</div>
+                    </div>
+                ) : faucetBalanceLow ? (
                     <div className="box">
                         <div className="faucetErrorText">
                             <span>The faucet is running</span>

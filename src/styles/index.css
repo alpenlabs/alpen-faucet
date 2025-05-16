@@ -79,6 +79,11 @@ button:focus-visible {
     justify-content: center;
 }
 
+.loadingText {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
 .faucetErrorText {
     margin-top: 1em;
     font-size: 1rem;
