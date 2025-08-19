@@ -3,6 +3,9 @@ FROM node:20
 
 WORKDIR /app
 
+# Install static server
+RUN npm install -g serve
+
 # Copy package.json and lock file first to optimize caching
 COPY package.json package-lock.json ./
 
@@ -14,9 +17,6 @@ COPY . .
 
 # Build for production
 RUN npm run build
-
-# Install static server
-RUN npm install -g serve
 
 # Expose the Vite development server port (default is 5173)
 EXPOSE 5173
